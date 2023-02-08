@@ -1,0 +1,28 @@
+CFLAGS = -Wall -Wextra -Werror
+SRCS = ft_printf.c ft_printf_nbr.c ft_printf_uns_nbr.c ft_printf_hex_nbr.c ft_printf_void.c
+NAME = libftprintf.a
+INCLUDE = include
+LIBFT = libft
+CC = cc
+
+.c.o:
+	CC -c $(CFLAGS) $^ -o $@ -I$(INCLUDE)
+
+all : $(NAME)
+	
+$(NAME) : $(SRCS:.c=.o)
+	make -C $(LIBFT)
+	cp $(LIBFT)/libft.a $(NAME)
+	ar -rcs $(NAME) $(SRCS:.c=.o)
+
+clean :
+	make clean -C $(LIBFT)
+	rm -f $(SRCS:.c=.o) $(BONUS:.c=.o)
+
+fclean : clean
+	make fclean -C $(LIBFT)
+	rm -f $(NAME)
+
+re : fclean all
+
+.PHONY : all clean re fclean bonus
