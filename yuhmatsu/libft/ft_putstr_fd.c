@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: takonaga <takonaga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/09 14:17:36 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/09 14:17:37 by yuhmatsu         ###   ########.fr       */
+/*   Created: 2022/10/20 05:17:15 by takonaga          #+#    #+#             */
+/*   Updated: 2022/10/22 15:15:45 by takonaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "libft.h"
 
-# include <stdlib.h>
-# include <unistd.h>
-
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-
-int	excecute_process(char *line);
-
-#endif
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (s == NULL)
+		return ;
+	write(fd, s, ft_strlen(s));
+}

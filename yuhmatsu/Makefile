@@ -1,25 +1,41 @@
-CFLAGS = -Wall -Wextra -Werror
-SRCS = test_prompt.c
-NAME = minishell
-INCLUDE = -I$(shell brew --prefix readline)/include
-LIBS = -L$(shell brew --prefix readline)/lib -lreadline
-RLDIR=`brew --prefix readline`
-CC = gcc
+NAME := minishell
+ifeq ($(shell uname), Darwin)
+	CFLAGS +=  -I$(shell brew --prefix readline)/include -fsanitize=address -g -Wall -Wextra -Werror
+	LDFLAGS += -L$(shell brew --prefix readline)/lib -lreadline -lhistory
 
-.c.o:
-	$(CC) -c $(CFLAGS) $^ -o $@
+else
+	CFLAGS += -fsanitize=leak -g -Wall -Wextra -Werror
+	LDFLAGS += -L/usr/include -lreadline
+endif
+INCLUDE := ./includes
+LIBFT := ./libft
+SRCS_DIR := ./srcs
+OBJS_DIr := ./objs
 
-all : $(NAME)
-	
-$(NAME) : $(SRCS:.c=.o)
-	$(CC) -o $(NAME) $(SRCS:.c=.o) $(INCLUDE) $(LIBS)
+SRCS := $(SRCS_DIR)/main.c \
 
-clean :
-	rm -f $(SRCS:.c=.o) $(BONUS:.c=.o)
+OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIr)%,$(SRCS:.c=.o))
 
-fclean : clean
-	rm -f $(NAME)
+.PHONY: all
+all: $(NAME)
 
-re : fclean all
+$(NAME): $(OBJS)
+	$(MAKE) -C $(LIBFT)
+	$(CC) $(CFLAGS) -I $(INCLUDE) $(OBJS) $(LDFLAGS) $(LIBFT)/libft.a -o $@
 
-.PHONY : all clean re fclean
+$(OBJS_DIr)/%.o: $(SRCS_DIR)/%.c
+	mkdir -p $(OBJS_DIr)/$(*D)
+	$(CC) $(CFLAGS) -I $(INCLUDE) -c $< -o $@
+
+.PHONY: clean
+clean:
+	$(MAKE) clean -C $(LIBFT)
+	$(RM) -rf $(OBJS_DIr)
+
+.PHONY: fclean
+fclean: clean
+	$(MAKE) fclean -C $(LIBFT)
+	$(RM) $(NAME)
+
+.PHONY: re
+re: fclean all
