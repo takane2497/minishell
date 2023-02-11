@@ -58,5 +58,3 @@ dkms.conf
 CMakeLists.txt
 cmake-build-debug/
 
-takonaga_copy_used_yuhmatsu/
-
