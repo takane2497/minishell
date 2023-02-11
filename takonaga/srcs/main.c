@@ -14,26 +14,32 @@
 
 
 void	fatal_error(const char *msg) __attribute__((noreturn));
-void	eer_exit(const char *location, const char *msg, int status) __attribute__((noreturn));
+void	err_exit(const char *location, const char *msg, int status) __attribute__((noreturn));
 
-void fatal_error(const char *msg)
+void	fatal_error(const char *msg)
 {
-	printf("Fatal Error: %s\n", msg);
+	ft_putstr_fd("Fatal Error: ", 2);
+	ft_putendl_fd((char *)msg, 2);
 	exit(1);
 }
 
-void err_exit(const char *location, const char *msg, int status)
+void	err_exit(const char *location, const char *msg, int status)
 {
-	printf("minishell: %s: %s\n", location, msg);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd((char *)location, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd((char *)msg, 2);
 	exit(status);
 }
 
 
-char *search_path(const char *filenema)
+char	*search_path(const char *filename)
 {
-	char path[PATH_MAX];
-	char *value;
-	char *end;
+	char	path[PATH_MAX];
+	char	*value;
+	char	*end;
+	char	*dup;
+
 
 	value = getenv("PATH");
 	while (*value)
@@ -45,11 +51,9 @@ char *search_path(const char *filenema)
 		else
 			ft_strlcpy(path, value, PASS_MAX);
 		ft_strlcat(path, "/", PATH_MAX);
-		ft_strlcat(path, filenema, PATH_MAX);
+		ft_strlcat(path, filename, PATH_MAX);
 		if (access(path, X_OK) == 0)
 		{
-			char *dup;
-
 			dup = ft_strdup(path);
 			if (dup == NULL)
 				fatal_error("strdup");
@@ -65,7 +69,7 @@ char *search_path(const char *filenema)
 void	validate_access(const char *path, const char *filename)
 {
 	if (path == NULL)
-		err_exit(filename, "command not found", 127);
+		err_exit(filename, "No such file or directory", 127);
 	if (access(path, F_OK) < 0)
 		err_exit(filename, "command not found", 127);
 }
