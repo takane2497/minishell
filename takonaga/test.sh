@@ -42,6 +42,7 @@ assert 'pwd'
 assert 'echo'
 assert 'ls'
 assert './a.out'
+assert 'cat'
 
 # no such command
 assert 'a.out'

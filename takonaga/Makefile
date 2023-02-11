@@ -7,9 +7,9 @@ else
 	CFLAGS += -fsanitize=leak -g -Wall -Wextra -Werror
 	LDFLAGS += -L/usr/include -lreadline
 endif
-INCLUDE := ./include
+INCLUDE := ./includes
 LIBFT := ./libft
-SRCS_DIR := ./src
+SRCS_DIR := ./srcs
 OBJS_DIr := ./objs
 
 SRCS := $(SRCS_DIR)/main.c \

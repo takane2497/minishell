@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../includes/minishell.h"
 
 
 void	fatal_error(const char *msg) __attribute__((noreturn));
@@ -39,7 +39,7 @@ char *search_path(const char *filenema)
 	while (*value)
 	{
 		ft_bzero(path, PATH_MAX);
-		end = strchr(value, ':');
+		end = ft_strchr(value, ':');
 		if (end)
 			ft_strlcpy(path, value, end - value + 1);
 		else
@@ -82,7 +82,7 @@ int	exec(char *argv[])
 		fatal_error("fork");
 	else if (pid == 0)
 	{
-		if (strchr(path, '/') == NULL)
+		if (ft_strchr(path, '/') == NULL)
 			path = search_path(path);
 		validate_access(path, argv[0]);
 		execve(path, argv, environ);
