@@ -16,15 +16,15 @@
 void	fatal_error(const char *msg) __attribute__((noreturn));
 void	eer_exit(const char *location, const char *msg, int status) __attribute__((noreturn));
 
-void	fatal_error(const char *msg)
+void fatal_error(const char *msg)
 {
-	dprintf(STDERR_FILENO, "Fatal Error: %s\n", msg);
+	printf("Fatal Error: %s\n", msg);
 	exit(1);
 }
 
-void	err_exit(const char *location, const char *msg, int status)
+void err_exit(const char *location, const char *msg, int status)
 {
-	dprintf(STDERR_FILENO, "minishell: %s: %s\n", location, msg);
+	printf("minishell: %s: %s\n", location, msg);
 	exit(status);
 }
 
