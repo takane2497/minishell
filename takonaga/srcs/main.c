@@ -103,7 +103,7 @@ int	exec(char *argv[])
 int	interpret(char *const line)
 {
 	int status;
-	char *argv[] = {line, NULL};
+	char *argv[] = {line, , '*', NULL};
 
 	status = exec(argv);
 	return (status);
