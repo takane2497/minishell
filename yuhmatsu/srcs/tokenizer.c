@@ -30,29 +30,31 @@ size_t	is_space(char *line, size_t i)
 
 size_t	is_operator(char *line)
 {
-	if (ft_strncmp(line, "||", 2))
+	if (ft_strncmp(line, "||", 2) == 0)
 		return (3);
-	if (ft_strncmp(line, "|", 1))
+	if (ft_strncmp(line, "|", 1) == 0)
 		return (1);
-	if (ft_strncmp(line, ">>>", 3))
+	if (ft_strncmp(line, ">>>", 3) == 0)
 		return (3);
-	if (ft_strncmp(line, ">>", 2))
+	if (ft_strncmp(line, ">>", 2) == 0)
 		return (2);
-	if (ft_strncmp(line, ">", 1))
+	if (ft_strncmp(line, ">", 1) == 0)
 		return (1);
-	if (ft_strncmp(line, "<<<", 3))
+	if (ft_strncmp(line, "<<<", 3) == 0)
 		return (3);
-	if (ft_strncmp(line, "<<", 2))
+	if (ft_strncmp(line, "<<", 2) == 0)
 		return (2);
-	if (ft_strncmp(line, "<", 1))
+	if (ft_strncmp(line, "<", 1) == 0)
 		return (1);
 	return (0);
 }
 
-t_token	*operator_error(char *line)
+//free token
+t_token	*operator_error(char *line, t_token *tok)
 {
+	tok = NULL;
 	*line = '\0';
-	return (NULL);
+	return (tok);
 }
 
 t_token	*my_tokenizer(char *line)
@@ -70,15 +72,17 @@ t_token	*my_tokenizer(char *line)
 		while (is_space(line, head))
 			head++;
 		tail = head;
-		while (line[tail] != '\0' && !is_space(line, head))
+		if (line[head] == '\0')
+			break ;
+		while (line[tail] != '\0' && is_space(line, tail) == 0)
 		{
-			if (is_operator(line + tail) && head == tail)
+			if (is_operator(line + tail) == 3)
+				return (operator_error(line + tail, tok_head));
+			else if (is_operator(line + tail) && head == tail)
 			{
 				tail += is_operator(line + tail);
 				break ;
 			}
-			else if (is_operator(line + tail) == 3)
-				return (operator_error(line + tail));
 			else if (is_operator(line + tail))
 				break ;
 			tail++;
