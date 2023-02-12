@@ -14,7 +14,7 @@ OBJS_DIR := ./objs
 UTIL_DIR := utils
 
 
-UTIL_FILES := x_func.c validate_path.c utils_for_expansion.c error_handling.c
+UTIL_FILES := x_func.c validate_char.c utils_for_expansion.c error_handling.c
 UTILS := $(addprefix $(UTIL_DIR)/, $(UTIL_FILES))
 
 SRC_FILES := execute.c expansion.c main.c tokenizer.c get_env_len.c get_len_word.c $(UTILS)

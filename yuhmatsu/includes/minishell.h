@@ -55,7 +55,7 @@ char	*x_strndup(char *str, size_t len);
 bool	is_alpha_under(char c);
 bool	is_alpha_num_under(char c);
 bool	is_space(char *line, size_t i);
-bool	is_operator(char *line);
+size_t	is_operator(char *line);
 
 char	*get_env_len(char *word, size_t *i, size_t *len);
 
