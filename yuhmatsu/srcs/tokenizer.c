@@ -23,32 +23,6 @@ t_token	*new_token(size_t kind, char *word)
 	return (tok);
 }
 
-size_t	is_space(char *line, size_t i)
-{
-	return (line[i] == ' ' || line[i] == '\t' || line[i] == '\n');
-}
-
-size_t	is_operator(char *line)
-{
-	if (ft_strncmp(line, "||", 2) == 0)
-		return (3);
-	if (ft_strncmp(line, "|", 1) == 0)
-		return (1);
-	if (ft_strncmp(line, ">>>", 3) == 0)
-		return (3);
-	if (ft_strncmp(line, ">>", 2) == 0)
-		return (2);
-	if (ft_strncmp(line, ">", 1) == 0)
-		return (1);
-	if (ft_strncmp(line, "<<<", 3) == 0)
-		return (3);
-	if (ft_strncmp(line, "<<", 2) == 0)
-		return (2);
-	if (ft_strncmp(line, "<", 1) == 0)
-		return (1);
-	return (0);
-}
-
 //error codeを258にしないといけない
 t_token	*error_hadling_in_tok(char *line, t_token *tok, size_t error_node)
 {
