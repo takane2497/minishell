@@ -55,7 +55,7 @@ char	*x_strndup(char *str, size_t len)
 {
 	char	*line;
 
-	line = strndup(str, len);
+	line = ft_strndup(str, len);
 	if (line == NULL)
 	{
 		perror("malloc error");
