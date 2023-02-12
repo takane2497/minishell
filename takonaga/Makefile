@@ -1,6 +1,6 @@
 NAME := minishell
 ifeq ($(shell uname), Darwin)
-	CFLAGS +=  -I$(shell brew --prefix readline)/include -fsanitize=address -g -Wall -Wextra -Werror
+	CFLAGS +=  -I$(shell brew --prefix readline)/include -g -Wall -Wextra -Werror
 	LDFLAGS += -L$(shell brew --prefix readline)/lib -lreadline -lhistory
 
 else
@@ -10,11 +10,17 @@ endif
 INCLUDE := ./includes
 LIBFT := ./libft
 SRCS_DIR := ./srcs
-OBJS_DIr := ./objs
+OBJS_DIR := ./objs
+UTIL_DIR := utils
 
-SRCS := $(SRCS_DIR)/main.c \
 
-OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIr)%,$(SRCS:.c=.o))
+UTIL_FILES := x_func.c
+UTILS := $(addprefix $(UTIL_DIR)/, $(UTIL_FILES))
+
+SRC_FILES := execute.c expansion.c main.c tokenizer.c $(UTILS)
+SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
+
+OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIR)%,$(SRCS:.c=.o))
 
 .PHONY: all
 all: $(NAME)
@@ -23,14 +29,14 @@ $(NAME): $(OBJS)
 	$(MAKE) -C $(LIBFT)
 	$(CC) $(CFLAGS) -I $(INCLUDE) $(OBJS) $(LDFLAGS) $(LIBFT)/libft.a -o $@
 
-$(OBJS_DIr)/%.o: $(SRCS_DIR)/%.c
-	mkdir -p $(OBJS_DIr)/$(*D)
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
+	mkdir -p $(OBJS_DIR)/$(*D)
 	$(CC) $(CFLAGS) -I $(INCLUDE) -c $< -o $@
 
 .PHONY: clean
 clean:
 	$(MAKE) clean -C $(LIBFT)
-	$(RM) -rf $(OBJS_DIr)
+	$(RM) -rf $(OBJS_DIR)
 
 .PHONY: fclean
 fclean: clean

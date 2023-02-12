@@ -22,6 +22,7 @@ void	*x_malloc(size_t size)
 		perror("malloc");
 		exit(1);
 	}
+	return (tmp);
 }
 
 void	*x_calloc(size_t count, size_t size)
@@ -34,6 +35,7 @@ void	*x_calloc(size_t count, size_t size)
 		perror("calloc");
 		exit(1);
 	}
+	return (tmp);
 }
 
 char	*x_strdup(char *str)
@@ -43,7 +45,7 @@ char	*x_strdup(char *str)
 	line = ft_strdup(str);
 	if (line == NULL)
 	{
-		perror("malloc error")
+		perror("malloc error");
 		exit(1);
 	}
 	return (line);
@@ -61,4 +63,3 @@ char	*x_strndup(char *str, size_t len)
 	}
 	return (line);
 }
-
