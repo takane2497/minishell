@@ -27,7 +27,7 @@ bool	is_space(char *line, size_t i)
 	return (line[i] == ' ' || line[i] == '\t' || line[i] == '\n');
 }
 
-bool	is_operator(char *line)
+size_t	is_operator(char *line)
 {
 	if (ft_strncmp(line, "||", 2) == 0)
 		return (3);
