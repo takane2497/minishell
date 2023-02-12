@@ -18,11 +18,15 @@
 # define TK_EOF 2
 # define TK_START 3
 
+# define UNCLOSED 0
+# define OPERATOR 1
+
 # include "../libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
 # include <limits.h>
+# include <stdbool.h>
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -37,13 +41,26 @@ typedef struct s_token
 	t_token	*next;
 }t_token;
 
-t_token	*my_tokenizer(char *line);
-char	**expansion(t_token *tok);
 int		interpret(char *const line);
+
+t_token	*my_tokenizer(char *line);
+
+char	**expansion(t_token *tok);
+void	free_argv_token(char **argv, t_token *tok);
 
 void	*x_malloc(size_t size);
 void	*x_calloc(size_t count, size_t size);
 char	*x_strdup(char *str);
 char	*x_strndup(char *str, size_t len);
+
+bool	is_alpha_under(char c);
+bool	is_alpha_num_under(char c);
+
+char	*get_env_len(char *word, size_t *i, size_t *len);
+
+size_t	get_len_word(char *word);
+
+size_t	token_size(t_token *tok);
+void	free_argv_token(char **argv, t_token *tok);
 
 #endif
