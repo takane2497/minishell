@@ -36,7 +36,6 @@ char	*search_path(const char *filename)
 	char	path[PATH_MAX];
 	char	*value;
 	char	*end;
-	char	*dup;
 
 	value = getenv("PATH");
 	while (*value)
@@ -50,12 +49,7 @@ char	*search_path(const char *filename)
 		ft_strlcat(path, "/", PATH_MAX);
 		ft_strlcat(path, filename, PATH_MAX);
 		if (access(path, X_OK) == 0)
-		{
-			dup = ft_strdup(path);
-			if (dup == NULL)
-				fatal_error("strdup");
-			return (dup);
-		}
+			return (x_strdup(path));
 		if (end == NULL)
 			return (NULL);
 		value = end + 1;
@@ -109,5 +103,6 @@ int	interpret(char *const line)
 	if (argv == NULL)
 		return (0);
 	status = exec(argv);
+	free_argv_token(argv, tok);
 	return (status);
 }

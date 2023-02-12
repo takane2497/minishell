@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minishell.h"
 
 char	*ft_strndup(const char *s1, size_t n)
 {
@@ -20,7 +20,7 @@ char	*ft_strndup(const char *s1, size_t n)
 	if (s1 == NULL || n == 0)
 		return (NULL);
 	i = 0;
-	p = malloc(ft_strlen(s1));
+	p = x_malloc(ft_strlen(s1));
 	if (p == NULL)
 		return (NULL);
 	while (s1 && s1[i] && i < n)
