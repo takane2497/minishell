@@ -46,10 +46,12 @@ size_t	is_operator(char *line)
 		return (2);
 	if (ft_strncmp(line, "<", 1))
 		return (1);
+	return (0);
 }
 
 t_token	*operator_error(char *line)
 {
+	*line = '\0';
 	return (NULL);
 }
 

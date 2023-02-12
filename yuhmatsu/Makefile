@@ -12,10 +12,14 @@ LIBFT := ./libft
 SRCS_DIR := ./srcs
 OBJS_DIr := ./objs
 
-FILES := execute.c expansion.c main.c tokenizer.c
-SRCS := $(addprefix $(SRCS_DIR)/, $(FILES))
+SRC_FILES := execute.c expansion.c main.c tokenizer.c
+SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 
-OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIr)%,$(SRCS:.c=.o))
+
+UTIL_FILES := x_func.c
+UTILS := $(addprefix $(UTIL_DIR)/, $(UTIL_FILES))
+
+OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIr)%,$(SRCS:.c=.o)) $(patsubst $(UTIL_DIR)%,$(OBJS_DIr)%,$(UTILS:.c=.o))
 
 .PHONY: all
 all: $(NAME)
