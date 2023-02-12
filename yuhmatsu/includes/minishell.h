@@ -54,6 +54,8 @@ char	*x_strndup(char *str, size_t len);
 
 bool	is_alpha_under(char c);
 bool	is_alpha_num_under(char c);
+bool	is_space(char *line, size_t i);
+bool	is_operator(char *line);
 
 char	*get_env_len(char *word, size_t *i, size_t *len);
 
@@ -62,5 +64,8 @@ size_t	get_len_word(char *word);
 size_t	token_size(t_token *tok);
 void	free_argv_token(char **argv, t_token *tok);
 size_t	my_strlcat(char *dst, const char *src, size_t dstsize);
+
+void	fatal_error(const char *msg);
+void	err_exit(const char *location, const char *msg, int status);
 
 #endif
