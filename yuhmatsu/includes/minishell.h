@@ -13,6 +13,11 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define TK_WORD 0
+# define TK_OP 1
+# define TK_EOF 2
+# define TK_START 3
+
 # include "../libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>
@@ -22,5 +27,17 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+typedef struct s_token	t_token;
+
+typedef struct s_token
+{
+	char	*word;
+	size_t	kind;
+	t_token	*next;
+}t_token;
+
+t_token	*my_tokenizer(char *line);
+char	**expansion(t_token *tok);
 
 #endif
