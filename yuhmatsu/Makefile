@@ -12,7 +12,8 @@ LIBFT := ./libft
 SRCS_DIR := ./srcs
 OBJS_DIr := ./objs
 
-SRCS := $(SRCS_DIR)/main.c \
+FILES := execute.c expansion.c main.c tokenizer.c
+SRCS := $(addprefix $(SRCS_DIR)/, $(FILES))
 
 OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIr)%,$(SRCS:.c=.o))
 
