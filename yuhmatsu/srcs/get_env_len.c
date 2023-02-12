@@ -49,7 +49,7 @@ char	*get_env_len(char *word, size_t *i, size_t *len)
 	word[*i] = '\0';
 	ans = getenv(word + start);
 	word[*i] = tmp;
-	if (len != NULL)
+	if (len != NULL && ans != NULL)
 		*len += ft_strlen(ans);
 	return (ans);
 }

@@ -18,7 +18,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 	size_t	s_len;
 
 	s_len = ft_strlen(src);
-	if (dst == NULL || src == NULL)
+	if (dst == NULL)
 		return (s_len);
 	d_len = ft_strlen(dst);
 	if (dstsize <= d_len)
@@ -26,3 +26,20 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 	ft_strlcpy(&dst[d_len], src, dstsize - d_len);
 	return (d_len + s_len);
 }
+
+// int	main(void)
+// {
+// 	char src1[100] = "takonaga";
+// 	char dest1[100] = "aaaaaa";
+// 	char src2[100] = "takonaga";
+// 	char dest2[100] = "aaaaaa";
+// 	unsigned  int	size;
+
+// 	size = 100;
+// 	printf("mk: %zu\n", ft_strlcat(dest1, src1, size));
+// 	printf("mk: %s\n", dest1);
+// 	printf("or: %zu\n", strlcat(dest2, src2, size));
+// 	printf("or: %s\n", dest2);
+
+// 	return (0);
+// }

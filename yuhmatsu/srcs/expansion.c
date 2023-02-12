@@ -37,7 +37,7 @@ size_t	concat_in_double_quote(char *str, char *word, size_t *i, size_t len)
 	while (word[*i] != '\"')
 	{
 		if (word[*i] == '$')
-			j = ft_strlcat(str, get_env_len(word, i, NULL), len);
+			j = my_strlcat(str, get_env_len(word, i, NULL), len);
 		else
 		{
 			str[j] = word[*i];
@@ -71,7 +71,7 @@ char	*remove_quote(char *word)
 	while (word[i] != '\0')
 	{
 		if (word[i] == '$')
-			j = ft_strlcat(str, get_env_len(word, &i, NULL), len);
+			j = my_strlcat(str, get_env_len(word, &i, NULL), len);
 		else if (word[i] == '\'')
 			j += concat_in_singl_quote(str + j, word, &i);
 		else if (word[i] == '\"')

@@ -49,3 +49,20 @@ void	free_argv_token(char **argv, t_token *tok)
 	}
 	free(argv);
 }
+
+size_t	my_strlcat(char *dst, const char *src, size_t dstsize)
+{
+	size_t	d_len;
+	size_t	s_len;
+
+	if (dst == NULL)
+		return (0);
+	d_len = ft_strlen(dst);
+	if (src == NULL)
+		return (d_len);
+	s_len = ft_strlen(src);
+	if (dstsize <= d_len)
+		return (s_len + dstsize);
+	ft_strlcpy(&dst[d_len], src, dstsize - d_len);
+	return (d_len + s_len);
+}
