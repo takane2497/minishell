@@ -72,18 +72,18 @@ t_token	*my_tokenizer(char *line)
 		tail = head;
 		while (line[tail] != '\0' && !is_space(line, head))
 		{
-			if (is_operator(line[tail]) && head == tail)
+			if (is_operator(line + tail) && head == tail)
 			{
-				tail += is_operator(line[tail]);
+				tail += is_operator(line + tail);
 				break ;
 			}
-			else if (is_operator(line[tail]) == 3)
-				return (operator_error(line[tail]));
-			else if (is_operator(line[tail]))
+			else if (is_operator(line + tail) == 3)
+				return (operator_error(line + tail));
+			else if (is_operator(line + tail))
 				break ;
 			tail++;
 		}
-		tok->next = new_token(TK_WORD, x_strndup(line[head], tail - head));
+		tok->next = new_token(TK_WORD, x_strndup(line + head, tail - head));
 		tok = tok->next;
 		head = tail;
 	}
