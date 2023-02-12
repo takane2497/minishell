@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void	*x_malloc(size_t size)
 {
@@ -22,6 +22,7 @@ void	*x_malloc(size_t size)
 		perror("malloc");
 		exit(1);
 	}
+	return (tmp);
 }
 
 void	*x_calloc(size_t count, size_t size)
@@ -34,6 +35,7 @@ void	*x_calloc(size_t count, size_t size)
 		perror("calloc");
 		exit(1);
 	}
+	return (tmp);
 }
 
 char	*x_strdup(char *str)
@@ -53,7 +55,7 @@ char	*x_strndup(char *str, size_t len)
 {
 	char	*line;
 
-	line = ft_strndup(str, len);
+	line = strndup(str, len);
 	if (line == NULL)
 	{
 		perror("malloc error");
