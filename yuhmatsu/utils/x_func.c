@@ -48,3 +48,16 @@ char	*x_strdup(char *str)
 	}
 	return (line);
 }
+
+char	*x_strndup(char *str, size_t len)
+{
+	char	*line;
+
+	line = ft_strndup(str, len);
+	if (line == NULL)
+	{
+		perror("malloc error");
+		exit(1);
+	}
+	return (line);
+}
