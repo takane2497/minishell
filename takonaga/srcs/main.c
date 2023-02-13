@@ -31,5 +31,11 @@ int	main(void)
 		status = interpret(line);
 		free(line);
 	}
+	return (0);
 	exit(status);
 }
+
+// __attribute__((destructor))
+// static void destructor() {
+//     system("leaks -q minishell");
+// }

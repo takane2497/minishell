@@ -15,28 +15,11 @@
 void	fatal_error(const char *msg) __attribute__((noreturn));
 void	err_exit(const char *l, const char *m, int s) __attribute__((noreturn));
 
-void	fatal_error(const char *msg)
-{
-	ft_putstr_fd("Fatal Error: ", 2);
-	ft_putendl_fd((char *)msg, 2);
-	exit(1);
-}
-
-void	err_exit(const char *location, const char *msg, int status)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd((char *)location, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd((char *)msg, 2);
-	exit(status);
-}
-
 char	*search_path(const char *filename)
 {
 	char	path[PATH_MAX];
 	char	*value;
 	char	*end;
-	char	*dup;
 
 	value = getenv("PATH");
 	while (*value)
@@ -50,12 +33,7 @@ char	*search_path(const char *filename)
 		ft_strlcat(path, "/", PATH_MAX);
 		ft_strlcat(path, filename, PATH_MAX);
 		if (access(path, X_OK) == 0)
-		{
-			dup = ft_strdup(path);
-			if (dup == NULL)
-				fatal_error("strdup");
-			return (dup);
-		}
+			return (x_strdup(path));
 		if (end == NULL)
 			return (NULL);
 		value = end + 1;
@@ -109,5 +87,6 @@ int	interpret(char *const line)
 	if (argv == NULL)
 		return (0);
 	status = exec(argv);
+	free_argv_token(argv, tok);
 	return (status);
 }

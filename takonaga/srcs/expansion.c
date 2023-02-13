@@ -12,19 +12,75 @@
 
 #include "../includes/minishell.h"
 
-size_t	token_size(t_token *tok)
+size_t	concat_in_singl_quote(char *str, char *word, size_t *i)
 {
-	t_token	*tmp;
-	size_t	size;
+	size_t	j;
 
-	tmp = tok;
-	size = 0;
-	while (tmp->next != NULL)
+	j = 0;
+	*i += 1;
+	while (word[*i] != '\'')
 	{
-		size++;
-		tmp = tmp->next;
+		str[j] = word[*i];
+		*i += 1;
+		j += 1;
 	}
-	return (size);
+	*i += 1;
+	return (j);
+}
+
+size_t	concat_in_double_quote(char *str, char *word, size_t *i, size_t len)
+{
+	size_t	j;
+
+	j = 0;
+	*i += 1;
+	while (word[*i] != '\"')
+	{
+		if (word[*i] == '$')
+			j = my_strlcat(str, get_env_len(word, i, NULL), len);
+		else
+		{
+			str[j] = word[*i];
+			*i += 1;
+			j++;
+		}
+	}
+	*i += 1;
+	return (j);
+}
+
+size_t	concat_char(char *str, char *word, size_t *i)
+{
+	*str = word[*i];
+	*i += 1;
+	return (1);
+}
+
+char	*remove_quote(char *word)
+{
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	char	*str;
+
+	i = 0;
+	j = 0;
+	len = get_len_word(word);
+	str = x_malloc(len * sizeof(char));
+	*str = '\0';
+	while (word[i] != '\0')
+	{
+		if (word[i] == '$')
+			j = my_strlcat(str, get_env_len(word, &i, NULL), len);
+		else if (word[i] == '\'')
+			j += concat_in_singl_quote(str + j, word, &i);
+		else if (word[i] == '\"')
+			j += concat_in_double_quote(str + j, word, &i, len);
+		else
+			j += concat_char(str + j, word, &i);
+	}
+	str[j] = '\0';
+	return (str);
 }
 
 char	**expansion(t_token *tok)
@@ -41,7 +97,7 @@ char	**expansion(t_token *tok)
 	i = 0;
 	while (i < size)
 	{
-		argv[i] = tok->word;
+		argv[i] = remove_quote(tok->word);
 		tok = tok->next;
 		i++;
 	}
