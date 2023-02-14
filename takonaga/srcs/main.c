@@ -12,27 +12,25 @@
 
 #include "../includes/minishell.h"
 
+int	last_status;
+
 int	main(void)
 {
-	int		status;
 	char	*line;
 
 	rl_outstream = stderr;
-	status = 0;
+	last_status = 0;
 	while (1)
 	{
 		line = readline("minishell$ ");
 		if (line == NULL)
 			break ;
-		if (!*line)
-			continue ;
 		if (*line)
 			add_history(line);
-		status = interpret(line);
+		last_status = interpret(line);
 		free(line);
 	}
-	return (0);
-	exit(status);
+	exit(last_status);
 }
 
 // __attribute__((destructor))
