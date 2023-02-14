@@ -25,8 +25,6 @@ int	main(void)
 		line = readline("minishell$ ");
 		if (line == NULL)
 			break ;
-		if (!*line)
-			continue ;
 		if (*line)
 			add_history(line);
 		last_status = interpret(line);
