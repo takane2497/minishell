@@ -44,7 +44,7 @@ char	*search_path(const char *filename)
 void	validate_access(const char *path, const char *filename)
 {
 	if (path == NULL)
-		err_exit(filename, "No such file or directory", 127);
+		exerr_exit(filename, "No such file or directory", 127);
 	if (access(path, F_OK) < 0)
 		err_exit(filename, "command not found", 127);
 }
