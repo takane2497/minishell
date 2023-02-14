@@ -44,7 +44,7 @@ char	*search_path(const char *filename)
 void	validate_access(const char *path, const char *filename)
 {
 	if (path == NULL)
-		err_exit(filename, "No such file or directory", 127);
+		err_exit(filename, "command not found", 127);
 	if (access(path, F_OK) < 0)
 		err_exit(filename, "command not found", 127);
 }
@@ -74,19 +74,22 @@ int	exec(char *argv[])
 	}
 }
 
-int	interpret(char *const line)
+void	interpret(char *const line, int	*stat_loc)
 {
-	int		status;
 	char	**argv;
 	t_token	*tok;
 
 	tok = my_tokenizer(line);
 	if (tok == NULL)
-		return (1);
+	{
+		*stat_loc = ERROR_TOKENIZE;
+		return ;
+	}
 	argv = expansion(tok);
 	if (argv == NULL)
-		return (0);
-	status = exec(argv);
+	{
+		return ;
+	}
+	*stat_loc = exec(argv);
 	free_argv_token(argv, tok);
-	return (status);
 }
