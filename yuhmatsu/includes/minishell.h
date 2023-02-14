@@ -14,9 +14,12 @@
 # define MINISHELL_H
 
 # define TK_WORD 0
-# define TK_OP 1
-# define TK_EOF 2
-# define TK_START 3
+# define TK_START 1
+# define TK_PIPE 2
+# define TK_ADD_OUTPUT 3
+# define TK_OUTPUT 4
+# define TK_DLIMITER 5
+# define TK_INPUT 6
 
 # define UNCLOSED 0
 # define OPERATOR 1
@@ -34,12 +37,12 @@
 
 typedef struct s_token	t_token;
 
-typedef struct s_token
+struct s_token
 {
 	char	*word;
 	size_t	kind;
 	t_token	*next;
-}t_token;
+};
 
 int		interpret(char *const line);
 
@@ -56,6 +59,7 @@ bool	is_alpha_under(char c);
 bool	is_alpha_num_under(char c);
 bool	is_space(char *line, size_t i);
 size_t	is_operator(char *line);
+size_t	get_kinds(char *word);
 
 char	*get_env_len(char *word, size_t *i, size_t *len);
 

@@ -47,3 +47,18 @@ size_t	is_operator(char *line)
 		return (1);
 	return (0);
 }
+
+size_t	get_kinds(char *word)
+{
+	if (ft_strncmp(word, "|", 1) == 0)
+		return (TK_PIPE);
+	if (ft_strncmp(word, ">>", 2) == 0)
+		return (TK_ADD_OUTPUT);
+	if (ft_strncmp(word, ">", 1) == 0)
+		return (TK_OUTPUT);
+	if (ft_strncmp(word, "<<", 2) == 0)
+		return (TK_DLIMITER);
+	if (ft_strncmp(word, "<", 1) == 0)
+		return (TK_INPUT);
+	return (TK_WORD);
+}
