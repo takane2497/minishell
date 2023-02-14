@@ -35,7 +35,7 @@ char	*get_env_len(char *word, size_t *i, size_t *len)
 	env_len = 0;
 	*i += 1;
 	start = *i;
-	if (word[*i] == '$' || word[*i] == '0' || word[*i] == '?')
+	if (word[*i] == '0' || word[*i] == '?')
 		return (get_special_env(word, i, len));
 	if (!(is_alpha_under(word[*i])))
 	{

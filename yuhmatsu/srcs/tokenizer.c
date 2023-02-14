@@ -56,6 +56,21 @@ size_t	skip_content(char *line, size_t	*tail)
 	return (0);
 }
 
+bool	check_operator_error(t_token *tok)
+{
+	t_token	*tmp;
+
+	tmp = tok->next;
+	while (tmp != NULL)
+	{
+		if (tmp->kind != TK_WORD && \
+			(tmp->next == NULL || tmp->next->kind != TK_WORD))
+			return (true);
+		tmp = tmp->next;
+	}
+	return (false);
+}
+
 t_token	*my_tokenizer(char *line)
 {
 	t_token	*tok;
@@ -91,7 +106,11 @@ t_token	*my_tokenizer(char *line)
 		}
 		tok->next = new_token(TK_WORD, x_strndup(line + head, tail - head));
 		tok = tok->next;
+		if (is_operator(tok->word))
+			tok->kind = get_kinds(tok->word);
 		head = tail;
 	}
+	if (check_operator_error(tok_head))
+		return (error_hadling_in_tok(line, tok_head, OPERATOR));
 	return (tok_head);
 }
