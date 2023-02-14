@@ -42,6 +42,8 @@ char	*x_strdup(char *str)
 {
 	char	*line;
 
+	if (!str)
+		return (NULL);
 	line = ft_strdup(str);
 	if (line == NULL)
 	{
