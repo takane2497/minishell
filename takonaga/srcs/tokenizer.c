@@ -16,7 +16,7 @@ t_token	*new_token(size_t kind, char *word)
 {
 	t_token	*tok;
 
-	tok = x_malloc(sizeof(t_token));
+	tok = x_calloc(1, sizeof(t_token));
 	tok->word = word;
 	tok->next = NULL;
 	tok->kind = kind;
