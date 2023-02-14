@@ -66,7 +66,7 @@ char	*remove_quote(char *word)
 	i = 0;
 	j = 0;
 	len = get_len_word(word);
-	str = x_malloc(len * sizeof(char));
+	str = x_calloc(len, sizeof(char));
 	*str = '\0';
 	while (word[i] != '\0')
 	{
@@ -92,7 +92,7 @@ char	**expansion(t_token *tok)
 	size = token_size(tok);
 	if (size == 0)
 		return (NULL);
-	argv = x_malloc((size + 1) * sizeof(char *));
+	argv = x_calloc((size + 1), sizeof(char *));
 	tok = tok->next;
 	i = 0;
 	while (i < size)
