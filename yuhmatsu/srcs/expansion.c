@@ -83,23 +83,50 @@ char	*remove_quote(char *word)
 	return (str);
 }
 
-char	**expansion(t_token *tok)
+t_token	*redirect_output(t_token *tmp, int *output_fds, size_t *j)
+{
+	char	*str;
+	int		tmp_fd;
+
+	str = remove_quote(tmp->next->word);
+	if (tmp->kind == TK_ADD_OUTPUT)
+		tmp_fd = open(str, O_WRONLY | O_CREAT | O_APPEND, \
+					S_IWUSR | S_IRUSR);
+	else
+		tmp_fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, \
+					S_IWUSR | S_IRUSR);
+	free(str);
+	output_fds[*j] = dup(1);
+	*j += 1;
+	dup2(tmp_fd, 1);
+	tmp = tmp->next->next;
+	return (tmp);
+}
+
+char	**expansion(t_token *tok, int **output_fds)
 {
 	char	**argv;
 	size_t	size;
 	size_t	i;
+	size_t	j;
+	t_token	*tmp;
 
-	size = token_size(tok);
+	size = token_size(tok, output_fds);
 	if (size == 0)
 		return (NULL);
 	argv = x_malloc((size + 1) * sizeof(char *));
-	tok = tok->next;
+	tmp = tok->next;
 	i = 0;
-	while (i < size)
+	j = 0;
+	while (tmp != NULL)
 	{
-		argv[i] = remove_quote(tok->word);
-		tok = tok->next;
-		i++;
+		if (tmp->kind == TK_OUTPUT || tmp->kind == TK_ADD_OUTPUT)
+			tmp = redirect_output(tmp, *output_fds, &j);
+		else if (tmp->kind == TK_WORD)
+		{
+			argv[i++] = remove_quote(tmp->word);
+			tmp = tmp->next;
+		}
 	}
 	argv[i] = NULL;
 	return (argv);
