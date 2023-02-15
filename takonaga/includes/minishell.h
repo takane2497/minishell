@@ -47,7 +47,7 @@ typedef struct s_token
 	t_token	*next;
 }t_token;
 
-int		interpret(char *const line);
+void	interpret(char *const line, int *stat_loc);
 
 t_token	*my_tokenizer(char *line);
 
