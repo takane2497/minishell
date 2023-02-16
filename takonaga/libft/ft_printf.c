@@ -12,13 +12,13 @@
 
 #include "libft.h"
 
-static	int	check_formats(va_list ap, const char format)
+static	int	check_formats(int fd, va_list ap, const char format)
 {
 	int	len;
 
 	len = 0;
 	if (format == 'c')
-		len += put_char(va_arg(ap, int));
+		len += put_char(fd, va_arg(ap, int));
 	else if (format == 's')
 		len += print_str(va_arg(ap, char *));
 	else if (format == 'p')
@@ -47,11 +47,11 @@ int	ft_printf(const char *format, ...)
 	{
 		if (format[i] == '%')
 		{
-			len += check_formats(ap, format[i + 1]);
+			len += check_formats(1, ap, format[i + 1]);
 			i++;
 		}
 		else
-			len += put_char(format[i]);
+			len += put_char(1, format[i]);
 		i++;
 	}
 	va_end(ap);
@@ -71,7 +71,7 @@ int	ft_dprintf(int fd, const char *format, ...)
 	{
 		if (format[i] == '%')
 		{
-			len += check_formats(ap, format[i + 1]);
+			len += check_formats(fd, ap, format[i + 1]);
 			i++;
 		}
 		else

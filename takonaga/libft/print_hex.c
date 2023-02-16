@@ -35,13 +35,13 @@ static	void	put_hex(unsigned int nb, const char format)
 	else
 	{
 		if (nb <= 9)
-			put_char((nb + '0'));
+			put_char(1, (nb + '0'));
 		else
 		{
 			if (format == 'x')
-				put_char(nb - 10 + 'a');
+				put_char(1, (nb - 10 + 'a'));
 			if (format == 'X')
-				put_char(nb -10 + 'A');
+				put_char(1, (nb -10 + 'A'));
 		}
 	}
 }
