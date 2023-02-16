@@ -102,6 +102,8 @@ int	interpret(char *const line)
 
 	tok = my_tokenizer(line);
 	fds = x_calloc(1, sizeof(t_fds));
+	fds->input_index = 0;
+	fds->output_index = 0;
 	if (tok == NULL)
 		return (1);
 	argv = expansion(tok, fds);

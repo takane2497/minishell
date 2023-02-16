@@ -51,6 +51,8 @@ typedef struct s_fds
 	int		*output_fds;
 	size_t	input_count;
 	size_t	output_count;
+	size_t	input_index;
+	size_t	output_index;
 }t_fds;
 
 int		interpret(char *const line);
