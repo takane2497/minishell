@@ -83,10 +83,61 @@ char	*remove_quote(char *word)
 	return (str);
 }
 
-t_token	*redirect_output(t_token *tmp, int *output_fds, size_t *j)
+int	read_heredoc(const char *delimiter)
 {
-	char	*str;
-	int		tmp_fd;
+	char	*line;
+	int		pfd[2];
+	size_t	len;
+
+	len = ft_strlen(delimiter);
+	if (pipe(pfd) < 0)
+		fatal_error("pipe");
+	while (1)
+	{
+		line = readline("> ");
+		if (line == NULL)
+			break ;
+		if (ft_strncmp(line, delimiter, len) == 0)
+		{
+			free(line);
+			break ;
+		}
+		//ここがまずい、自作関数にしないと
+		dprintf(pfd[1], "%s\n", line);
+		free(line);
+	}
+	close(pfd[1]);
+	return (pfd[0]);
+}
+
+t_token	*redirect_input(t_token *tmp, t_fds *fds)
+{
+	char			*str;
+	int				tmp_fd;
+	static size_t	j;
+
+	str = remove_quote(tmp->next->word);
+	if (tmp->kind == TK_INPUT)
+	{
+		tmp_fd = open(str, O_RDONLY);
+		//error処理しないとまずい
+	}
+	else
+		tmp_fd = read_heredoc(str);
+	free(str);
+	fds->input_fds[j] = dup(0);
+	j++;
+	dup2(tmp_fd, 0);
+	close(tmp_fd);
+	tmp = tmp->next->next;
+	return (tmp);
+}
+
+t_token	*redirect_output(t_token *tmp, t_fds *fds)
+{
+	char		*str;
+	int			tmp_fd;
+	static size_t	j;
 
 	str = remove_quote(tmp->next->word);
 	if (tmp->kind == TK_ADD_OUTPUT)
@@ -96,32 +147,33 @@ t_token	*redirect_output(t_token *tmp, int *output_fds, size_t *j)
 		tmp_fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, \
 					S_IWUSR | S_IRUSR);
 	free(str);
-	output_fds[*j] = dup(1);
-	*j += 1;
+	fds->output_fds[j] = dup(1);
+	j++;
 	dup2(tmp_fd, 1);
+	close(tmp_fd);
 	tmp = tmp->next->next;
 	return (tmp);
 }
 
-char	**expansion(t_token *tok, int **output_fds)
+char	**expansion(t_token *tok, t_fds *fds)
 {
 	char	**argv;
 	size_t	size;
 	size_t	i;
-	size_t	j;
 	t_token	*tmp;
 
-	size = token_size(tok, output_fds);
+	size = token_size(tok, fds);
 	if (size == 0)
 		return (NULL);
-	argv = x_malloc((size + 1) * sizeof(char *));
+	argv = x_calloc((size + 1), sizeof(char *));
 	tmp = tok->next;
 	i = 0;
-	j = 0;
 	while (tmp != NULL)
 	{
-		if (tmp->kind == TK_OUTPUT || tmp->kind == TK_ADD_OUTPUT)
-			tmp = redirect_output(tmp, *output_fds, &j);
+		if (tmp->kind == TK_INPUT || tmp->kind == TK_DLIMITER)
+			tmp = redirect_input(tmp, fds);
+		else if (tmp->kind == TK_OUTPUT || tmp->kind == TK_ADD_OUTPUT)
+			tmp = redirect_output(tmp, fds);
 		else if (tmp->kind == TK_WORD)
 		{
 			argv[i++] = remove_quote(tmp->word);

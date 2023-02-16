@@ -45,11 +45,19 @@ struct s_token
 	t_token	*next;
 };
 
+typedef struct s_fds
+{
+	int		*input_fds;
+	int		*output_fds;
+	size_t	input_count;
+	size_t	output_count;
+}t_fds;
+
 int		interpret(char *const line);
 
 t_token	*my_tokenizer(char *line);
 
-char	**expansion(t_token *tok, int **output_fds);
+char	**expansion(t_token *tok, t_fds *fds);
 
 void	*x_malloc(size_t size);
 void	*x_calloc(size_t count, size_t size);
@@ -66,8 +74,8 @@ char	*get_env_len(char *word, size_t *i, size_t *len);
 
 size_t	get_len_word(char *word);
 
-size_t	token_size(t_token *tok, int **output_fds);
-void	free_argv_token(char **argv, t_token *tok);
+size_t	token_size(t_token *tok, t_fds *fds);
+int		free_argv_token(char **argv, t_token *tok);
 size_t	my_strlcat(char *dst, const char *src, size_t dstsize);
 
 void	fatal_error(const char *msg) __attribute__((noreturn));

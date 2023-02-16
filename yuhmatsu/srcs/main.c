@@ -25,7 +25,10 @@ int	main(void)
 		if (line == NULL)
 			break ;
 		if (!*line)
+		{
+			free(line);
 			continue ;
+		}
 		if (*line)
 			add_history(line);
 		status = interpret(line);
