@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-size_t	token_size(t_token *tok, t_fds *fds)
+size_t	token_size(t_token *tok)
 {
 	t_token	*tmp;
 	size_t	size;
@@ -24,26 +24,12 @@ size_t	token_size(t_token *tok, t_fds *fds)
 		if (tmp->kind == TK_WORD)
 			size++;
 		if (tmp->kind == TK_INPUT || tmp->kind == TK_DLIMITER)
-		{
-			fds->input_count++;
 			tmp = tmp->next;
-		}
 		if (tmp->kind == TK_OUTPUT || tmp->kind == TK_ADD_OUTPUT)
-		{
-			fds->output_count++;
 			tmp = tmp->next;
-		}
 		if (tmp != NULL)
 			tmp = tmp->next;
 	}
-	if (fds->output_count == 0)
-		fds->output_fds = NULL;
-	else
-		fds->output_fds = x_calloc(fds->output_count + 1, sizeof(int));
-	if (fds->input_count == 0)
-		fds->input_fds = NULL;
-	else
-		fds->input_fds = x_calloc(fds->input_count + 1, sizeof(int));
 	return (size);
 }
 

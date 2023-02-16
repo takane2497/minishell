@@ -64,12 +64,12 @@ char	*ft_strndup(const char *s1, size_t n);
  */
 int		ft_printf(const char *format, ...);
 int		ft_dprintf(int fd, const char *format, ...);
-int		put_char(int c);
-int		print_str(char *str);
-int		print_pointer(uint64_t pointer);
-int		put_nb(int nb);
-int		print_unsigned(unsigned int n);
-int		print_hex(unsigned int nb, const char format);
-int		put_percent(void);
+int		put_char(int fd, int c);
+int		print_str(int fd, char *str);
+int		print_pointer(int fd, uint64_t pointer);
+int		put_nb(int fd, int nb);
+int		print_unsigned(int fd, unsigned int n);
+int		print_hex(int fd, unsigned int nb, const char format);
+int		put_percent(int fd);
 
 #endif
