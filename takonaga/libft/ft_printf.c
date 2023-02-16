@@ -20,17 +20,17 @@ static	int	check_formats(int fd, va_list ap, const char format)
 	if (format == 'c')
 		len += put_char(fd, va_arg(ap, int));
 	else if (format == 's')
-		len += print_str(va_arg(ap, char *));
+		len += print_str(fd, va_arg(ap, char *));
 	else if (format == 'p')
-		len += print_pointer(va_arg(ap, uint64_t));
+		len += print_pointer(fd, va_arg(ap, uint64_t));
 	else if (format == 'd' || format == 'i')
-		len += put_nb(va_arg(ap, int));
+		len += put_nb(fd, va_arg(ap, int));
 	else if (format == 'u')
-		len += print_unsigned(va_arg(ap, unsigned int));
+		len += print_unsigned(fd, va_arg(ap, unsigned int));
 	else if ((format == 'x' || format == 'X' ))
-		len += print_hex(va_arg(ap, unsigned int), format);
+		len += print_hex(fd, va_arg(ap, unsigned int), format);
 	else if (format == '%')
-		len += put_percent();
+		len += put_percent(fd);
 	return (len);
 }	
 

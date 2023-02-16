@@ -25,33 +25,33 @@ static int	pointer_len(uintptr_t nb)
 	return (len);
 }
 
-static	void	put_pointer(uintptr_t nb)
+static	void	put_pointer(int fd, uintptr_t nb)
 {
 	if (nb >= 16)
 	{
-		put_pointer(nb / 16);
-		put_pointer(nb % 16);
+		put_pointer(fd, nb / 16);
+		put_pointer(fd, nb % 16);
 	}
 	else
 	{
 		if (nb <= 9)
-			put_char(1, (nb + '0'));
+			put_char(fd, (nb + '0'));
 		else
-			put_char(1, (nb - 10 + 'a'));
+			put_char(fd, (nb - 10 + 'a'));
 	}
 }
 
-int	print_pointer(uint64_t pointer)
+int	print_pointer(int fd, uint64_t pointer)
 {
 	int	len;
 
 	len = 0;
-	len += write(1, "0x", 2);
+	len += write(fd, "0x", 2);
 	if (pointer == 0)
-		len += write(1, "0", 1);
+		len += write(fd, "0", 1);
 	else
 	{
-		put_pointer(pointer);
+		put_pointer(int fd, pointer);
 		len += pointer_len(pointer);
 	}
 	return (len);
