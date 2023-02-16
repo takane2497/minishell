@@ -12,31 +12,31 @@
 
 #include "libft.h"
 
-static	void	put_str(char *str)
+static	void	put_str(int fd, char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i])
 	{
-		write (1, &str[i], 1);
+		write (fd, &str[i], 1);
 		i++;
 	}
 }
 
-int	print_str(char *str)
+int	print_str(int fd, char *str)
 {
 	int	i;
 
 	i = 0;
 	if (str == NULL)
 	{
-		put_str("(null)");
+		put_str(fd, "(null)");
 		return (6);
 	}
 	while (str[i])
 	{
-		write(1, &str[i], 1);
+		write(fd, &str[i], 1);
 		i++;
 	}
 	return (i);

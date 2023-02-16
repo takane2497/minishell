@@ -12,8 +12,8 @@
 
 #include "libft.h"
 
-int	put_percent(void)
+int	put_percent(int fd)
 {
-	write(1, "%", 1);
+	write(fd, "%", 1);
 	return (1);
 }
