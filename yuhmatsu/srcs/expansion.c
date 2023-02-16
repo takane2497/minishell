@@ -102,76 +102,72 @@ int	read_heredoc(const char *delimiter)
 			free(line);
 			break ;
 		}
-		dprintf(pfd[1], "%s\n", line);
+		ft_dprintf(pfd[1], "%s\n", line);
 		free(line);
 	}
 	close(pfd[1]);
 	return (pfd[0]);
 }
 
-t_token	*prepare_to_redirect_input(t_token *tmp, t_fds *fds)
+t_token	*prepare_to_redirect_input(t_token *tmp, int *now_input_fd)
 {
 	char	*str;
 
 	str = remove_quote(tmp->next->word);
+	if (*now_input_fd != 0)
+		close(*now_input_fd);
 	if (tmp->kind == TK_INPUT)
 	{
-		fds->input_fds[fds->input_index] = open(str, O_RDONLY);
+		*now_input_fd = open(str, O_RDONLY);
 		//error処理しないとまずい
 	}
 	else
-		fds->input_fds[fds->input_index] = read_heredoc(str);
+		*now_input_fd = read_heredoc(str);
 	free(str);
 	tmp = tmp->next->next;
 	return (tmp);
 }
 
-t_token	*redirect_output(t_token *tmp, t_fds *fds)
+t_token	*prepare_to_redirect_output(t_token *tmp, int *now_output_fd)
 {
 	char		*str;
-	int			tmp_fd;
 
 	str = remove_quote(tmp->next->word);
+	if (*now_output_fd != 1)
+		close(*now_output_fd);
 	if (tmp->kind == TK_ADD_OUTPUT)
-		tmp_fd = open(str, O_WRONLY | O_CREAT | O_APPEND, \
+		*now_output_fd = open(str, O_WRONLY | O_CREAT | O_APPEND, \
 					S_IWUSR | S_IRUSR);
 	else
-		tmp_fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, \
+		*now_output_fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, \
 					S_IWUSR | S_IRUSR);
 	free(str);
-	fds->output_fds[fds->output_index] = dup(1);
-	fds->output_index++;
-	dup2(tmp_fd, 1);
-	close(tmp_fd);
 	tmp = tmp->next->next;
 	return (tmp);
 }
 
-void	redirect_input(t_fds *fds)
+void	redirect(int *now_input_fd, int *now_output_fd)
 {
-	size_t	i;
-	size_t	tmp_fd;
+	int	tmp_intput_fd;
+	int	tmp_output_fd;
 
-	i = 0;
-	while (i < fds->input_count)
-	{
-		tmp_fd = fds->input_fds[i];
-		fds->input_fds[i] = dup(0);
-		i++;
-		dup2(tmp_fd, 0);
-		if (i != fds->input_count)
-			close(tmp_fd);
-	}
+	tmp_intput_fd = dup(0);
+	tmp_output_fd = dup(1);
+	dup2(*now_input_fd, 0);
+	dup2(*now_output_fd, 1);
+	*now_input_fd = tmp_intput_fd;
+	*now_output_fd = tmp_output_fd;
 }
 
-char	**expansion(t_token *tok, t_fds *fds)
+char	**expansion(t_token *tok, int *now_input_fd, int *now_output_fd)
 {
 	char	**argv;
 	size_t	size;
 	size_t	i;
 	t_token	*tmp;
 
-	size = token_size(tok, fds);
+	flag = 0;
+	size = token_size(tok);
 	if (size == 0)
 		return (NULL);
 	argv = x_calloc((size + 1), sizeof(char *));
@@ -180,16 +176,16 @@ char	**expansion(t_token *tok, t_fds *fds)
 	while (tmp != NULL)
 	{
 		if (tmp->kind == TK_INPUT || tmp->kind == TK_DLIMITER)
-			tmp = prepare_to_redirect_input(tmp, fds);
+			tmp = prepare_to_redirect_input(&tmp, now_input_fd);
 		else if (tmp->kind == TK_OUTPUT || tmp->kind == TK_ADD_OUTPUT)
-			tmp = redirect_output(tmp, fds);
+			tmp = prepare_to_redirect_output(tmp, now_output_fd);
 		else if (tmp->kind == TK_WORD)
 		{
 			argv[i++] = remove_quote(tmp->word);
 			tmp = tmp->next;
 		}
 	}
-	redirect_input(fds);
+	redirect(now_input_fd, now_output_fd);
 	argv[i] = NULL;
 	return (argv);
 }

@@ -59,7 +59,7 @@ int		interpret(char *const line);
 
 t_token	*my_tokenizer(char *line);
 
-char	**expansion(t_token *tok, t_fds *fds);
+char	**expansion(t_token *tok, int *now_input_fd, int *now_output_fd);
 
 void	*x_malloc(size_t size);
 void	*x_calloc(size_t count, size_t size);
@@ -76,7 +76,7 @@ char	*get_env_len(char *word, size_t *i, size_t *len);
 
 size_t	get_len_word(char *word);
 
-size_t	token_size(t_token *tok, t_fds *fds);
+size_t	token_size(t_token *tok);
 int		free_argv_token(char **argv, t_token *tok);
 size_t	my_strlcat(char *dst, const char *src, size_t dstsize);
 

@@ -12,14 +12,14 @@
 
 #include "libft.h"
 
-int	put_nb(int n)
+int	put_nb(int fd, int n)
 {
 	int		len;
 	char	*nb;
 
 	len = 0;
 	nb = ft_itoa(n);
-	len = print_str(nb);
+	len = print_str(fd, nb);
 	free(nb);
 	return (len);
 }

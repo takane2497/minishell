@@ -31,7 +31,7 @@ static	char	*uitoa(unsigned int n)
 	int		len;
 
 	len = nb_len(n);
-	nb = (char *)malloc(sizeof(char) * (len +1));
+	nb = (char *)malloc(sizeof(char) * (len + 1));
 	if (!nb)
 		return (0);
 	nb[len] = '\0';
@@ -44,18 +44,18 @@ static	char	*uitoa(unsigned int n)
 	return (nb);
 }
 
-int	print_unsigned(unsigned int n)
+int	print_unsigned(int fd, unsigned int n)
 {
 	int		len;
 	char	*nb;
 
 	len = 0;
 	if (n == 0)
-		len += write(1, "0", 1);
+		len += write(fd, "0", 1);
 	else
 	{
 		nb = uitoa(n);
-		len += print_str(nb);
+		len += print_str(fd, nb);
 		free(nb);
 	}
 	return (len);

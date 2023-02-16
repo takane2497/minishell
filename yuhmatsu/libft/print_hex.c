@@ -25,32 +25,32 @@ static	int	hex_len(unsigned int nb)
 	return (len);
 }
 
-static	void	put_hex(unsigned int nb, const char format)
+static	void	put_hex(int fd, unsigned int nb, const char format)
 {
 	if (nb >= 16)
 	{
-		put_hex(nb / 16, format);
-		put_hex(nb % 16, format);
+		put_hex(fd, nb / 16, format);
+		put_hex(fd, nb % 16, format);
 	}
 	else
 	{
 		if (nb <= 9)
-			put_char((nb + '0'));
+			put_char(fd, (nb + '0'));
 		else
 		{
 			if (format == 'x')
-				put_char(nb - 10 + 'a');
+				put_char(fd, (nb - 10 + 'a'));
 			if (format == 'X')
-				put_char(nb -10 + 'A');
+				put_char(fd, (nb -10 + 'A'));
 		}
 	}
 }
 
-int	print_hex(unsigned int nb, const char format)
+int	print_hex(int fd, unsigned int nb, const char format)
 {
 	if (nb == 0)
-		return (write(1, "0", 1));
+		return (write(fd, "0", 1));
 	else
-		put_hex(nb, format);
+		put_hex(fd, nb, format);
 	return (hex_len(nb));
 }
