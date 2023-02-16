@@ -35,9 +35,9 @@ static	void	put_pointer(uintptr_t nb)
 	else
 	{
 		if (nb <= 9)
-			put_char(1, (nb + '0'));
+			put_char(nb + '0');
 		else
-			put_char(1, (nb - 10 + 'a'));
+			put_char(nb - 10 + 'a');
 	}
 }
 

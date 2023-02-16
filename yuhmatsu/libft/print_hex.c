@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_pointer.c                                    :+:      :+:    :+:   */
+/*   print_hex.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takonaga <takonaga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/29 03:28:42 by takonaga          #+#    #+#             */
-/*   Updated: 2022/10/29 07:03:30 by takonaga         ###   ########.fr       */
+/*   Created: 2022/10/29 04:07:19 by takonaga          #+#    #+#             */
+/*   Updated: 2022/10/29 07:03:21 by takonaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	pointer_len(uintptr_t nb)
+static	int	hex_len(unsigned int nb)
 {
 	int	len;
 
@@ -25,34 +25,32 @@ static int	pointer_len(uintptr_t nb)
 	return (len);
 }
 
-static	void	put_pointer(uintptr_t nb)
+static	void	put_hex(unsigned int nb, const char format)
 {
 	if (nb >= 16)
 	{
-		put_pointer(nb / 16);
-		put_pointer(nb % 16);
+		put_hex(nb / 16, format);
+		put_hex(nb % 16, format);
 	}
 	else
 	{
 		if (nb <= 9)
-			put_char(1, (nb + '0'));
+			put_char((nb + '0'));
 		else
-			put_char(1, (nb - 10 + 'a'));
+		{
+			if (format == 'x')
+				put_char(nb - 10 + 'a');
+			if (format == 'X')
+				put_char(nb -10 + 'A');
+		}
 	}
 }
 
-int	print_pointer(uint64_t pointer)
+int	print_hex(unsigned int nb, const char format)
 {
-	int	len;
-
-	len = 0;
-	len += write(1, "0x", 2);
-	if (pointer == 0)
-		len += write(1, "0", 1);
+	if (nb == 0)
+		return (write(1, "0", 1));
 	else
-	{
-		put_pointer(pointer);
-		len += pointer_len(pointer);
-	}
-	return (len);
+		put_hex(nb, format);
+	return (hex_len(nb));
 }

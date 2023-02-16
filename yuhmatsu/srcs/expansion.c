@@ -102,7 +102,6 @@ int	read_heredoc(const char *delimiter)
 			free(line);
 			break ;
 		}
-		//ここがまずい、自作関数にしないと
 		dprintf(pfd[1], "%s\n", line);
 		free(line);
 	}

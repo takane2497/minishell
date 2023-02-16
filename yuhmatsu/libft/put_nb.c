@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   put_char.c                                         :+:      :+:    :+:   */
+/*   put_nb.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takonaga <takonaga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/29 00:22:54 by takonaga          #+#    #+#             */
-/*   Updated: 2022/10/29 07:03:51 by takonaga         ###   ########.fr       */
+/*   Created: 2022/10/29 00:23:18 by takonaga          #+#    #+#             */
+/*   Updated: 2022/10/29 07:44:23 by takonaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	put_char(int fd, int c)
+int	put_nb(int n)
 {
-	write(fd, &c, 1);
-	return (1);
+	int		len;
+	char	*nb;
+
+	len = 0;
+	nb = ft_itoa(n);
+	len = print_str(nb);
+	free(nb);
+	return (len);
 }

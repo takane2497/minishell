@@ -17,7 +17,12 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <limits.h>
+# include <stdarg.h>
 
+/*
+ * libft
+ */
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);
@@ -53,5 +58,18 @@ void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_strndup(const char *s1, size_t n);
+
+/*
+ * printf
+ */
+int		ft_printf(const char *format, ...);
+int		ft_dprintf(int fd, const char *format, ...);
+int		put_char(int c);
+int		print_str(char *str);
+int		print_pointer(uint64_t pointer);
+int		put_nb(int nb);
+int		print_unsigned(unsigned int n);
+int		print_hex(unsigned int nb, const char format);
+int		put_percent(void);
 
 #endif
