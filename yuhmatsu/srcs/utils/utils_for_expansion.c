@@ -12,35 +12,42 @@
 
 #include "../../includes/minishell.h"
 
-size_t	token_size(t_token *tok, int **output_fds)
+size_t	token_size(t_token *tok, t_fds *fds)
 {
 	t_token	*tmp;
 	size_t	size;
-	size_t	output_count;
 
 	tmp = tok;
 	size = 0;
-	output_count = 0;
 	while (tmp != NULL)
 	{
 		if (tmp->kind == TK_WORD)
 			size++;
+		if (tmp->kind == TK_INPUT || tmp->kind == TK_DLIMITER)
+		{
+			fds->input_count++;
+			tmp = tmp->next;
+		}
 		if (tmp->kind == TK_OUTPUT || tmp->kind == TK_ADD_OUTPUT)
 		{
-			output_count++;
+			fds->output_count++;
 			tmp = tmp->next;
 		}
 		if (tmp != NULL)
 			tmp = tmp->next;
 	}
-	if (output_count == 0)
-		*output_fds = NULL;
+	if (fds->output_count == 0)
+		fds->output_fds = NULL;
 	else
-		*output_fds = x_calloc(output_count + 1, sizeof(int));
+		fds->output_fds = x_calloc(fds->output_count + 1, sizeof(int));
+	if (fds->input_count == 0)
+		fds->input_fds = NULL;
+	else
+		fds->input_fds = x_calloc(fds->input_count + 1, sizeof(int));
 	return (size);
 }
 
-void	free_argv_token(char **argv, t_token *tok)
+int	free_argv_token(char **argv, t_token *tok)
 {
 	size_t	i;
 	t_token	*tmp;
@@ -54,13 +61,14 @@ void	free_argv_token(char **argv, t_token *tok)
 	}
 	i = 0;
 	if (argv == NULL)
-		return ;
+		return (0);
 	while (argv[i] != NULL)
 	{
 		free(argv[i]);
 		i++;
 	}
 	free(argv);
+	return (0);
 }
 
 size_t	my_strlcat(char *dst, const char *src, size_t dstsize)
