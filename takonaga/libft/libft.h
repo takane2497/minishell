@@ -64,7 +64,7 @@ char	*ft_strndup(const char *s1, size_t n);
  */
 int		ft_printf(const char *format, ...);
 int		ft_dprintf(int fd, const char *format, ...);
-int		put_char(int c);
+int		put_char(int fd, int c);
 int		print_str(char *str);
 int		print_pointer(uint64_t pointer);
 int		put_nb(int nb);

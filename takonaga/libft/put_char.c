@@ -12,8 +12,8 @@
 
 #include "libft.h"
 
-int	put_char(int c)
+int	put_char(int fd, int c)
 {
-	write(1, &c, 1);
+	write(fd, &c, 1);
 	return (1);
 }
