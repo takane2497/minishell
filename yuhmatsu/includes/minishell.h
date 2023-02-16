@@ -26,6 +26,7 @@
 
 # include "../libft/libft.h"
 # include <stdlib.h>
+# include <fcntl.h>
 # include <unistd.h>
 # include <string.h>
 # include <limits.h>
@@ -44,11 +45,21 @@ struct s_token
 	t_token	*next;
 };
 
+typedef struct s_fds
+{
+	int		*input_fds;
+	int		*output_fds;
+	size_t	input_count;
+	size_t	output_count;
+	size_t	input_index;
+	size_t	output_index;
+}t_fds;
+
 int		interpret(char *const line);
 
 t_token	*my_tokenizer(char *line);
 
-char	**expansion(t_token *tok);
+char	**expansion(t_token *tok, t_fds *fds);
 
 void	*x_malloc(size_t size);
 void	*x_calloc(size_t count, size_t size);
@@ -65,11 +76,11 @@ char	*get_env_len(char *word, size_t *i, size_t *len);
 
 size_t	get_len_word(char *word);
 
-size_t	token_size(t_token *tok);
-void	free_argv_token(char **argv, t_token *tok);
+size_t	token_size(t_token *tok, t_fds *fds);
+int		free_argv_token(char **argv, t_token *tok);
 size_t	my_strlcat(char *dst, const char *src, size_t dstsize);
 
-void	fatal_error(const char *msg);
-void	err_exit(const char *location, const char *msg, int status);
+void	fatal_error(const char *msg) __attribute__((noreturn));
+void	err_exit(const char *l, const char *m, int s) __attribute__((noreturn));
 
 #endif

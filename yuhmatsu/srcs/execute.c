@@ -12,9 +12,6 @@
 
 #include "../includes/minishell.h"
 
-void	fatal_error(const char *msg) __attribute__((noreturn));
-void	err_exit(const char *l, const char *m, int s) __attribute__((noreturn));
-
 char	*search_path(const char *filename)
 {
 	char	path[PATH_MAX];
@@ -74,19 +71,46 @@ int	exec(char *argv[])
 	}
 }
 
+void	undo_redirect(t_fds *fds)
+{
+	size_t	i;
+
+	if (fds->input_fds != NULL)
+	{
+		i = 0;
+		while (i < fds->input_count)
+			dup2(fds->input_fds[fds->input_count - 1 - i++], 0);
+		free(fds->input_fds);
+	}
+	if (fds->output_fds != NULL)
+	{
+		i = 0;
+		while (i < fds->output_count)
+			dup2(fds->output_fds[fds->output_count - 1 - i++], 1);
+		free(fds->output_fds);
+	}
+	free(fds);
+	return ;
+}
+
 int	interpret(char *const line)
 {
 	int		status;
 	char	**argv;
 	t_token	*tok;
+	t_fds	*fds;
 
 	tok = my_tokenizer(line);
+	fds = x_calloc(1, sizeof(t_fds));
+	fds->input_index = 0;
+	fds->output_index = 0;
 	if (tok == NULL)
 		return (1);
-	argv = expansion(tok);
+	argv = expansion(tok, fds);
 	if (argv == NULL)
-		return (0);
+		return (free_argv_token(NULL, tok));
 	status = exec(argv);
+	undo_redirect(fds);
 	free_argv_token(argv, tok);
 	return (status);
 }
