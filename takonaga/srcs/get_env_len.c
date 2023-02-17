@@ -66,12 +66,10 @@ char	*get_special_env(char *word, size_t *i, size_t *len)
 
 char	*get_env_len(char *word, size_t *i, size_t *len)
 {
-	size_t	env_len;
 	char	tmp;
 	char	*ans;
 	size_t	start;
 
-	env_len = 0;
 	*i += 1;
 	start = *i;
 	if (word[*i] == '$' || word[*i] == '0' || word[*i] == '?')

@@ -51,7 +51,7 @@ int	print_pointer(int fd, uint64_t pointer)
 		len += write(fd, "0", 1);
 	else
 	{
-		put_pointer(int fd, pointer);
+		put_pointer(fd, pointer);
 		len += pointer_len(pointer);
 	}
 	return (len);
