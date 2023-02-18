@@ -26,10 +26,14 @@ int	main(void)
 		if (line == NULL)
 			break ;
 		if (!*line)
+        {
+            free(line);
 			continue ;
+        }
+
 		if (*line)
 			add_history(line);
-		interpret(line, &last_status);
+		last_status = interpret(line);
 		free(line);
 	}
 	exit(last_status);

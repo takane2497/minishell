@@ -19,15 +19,21 @@ size_t	token_size(t_token *tok)
 
 	tmp = tok;
 	size = 0;
-	while (tmp->next != NULL)
+	while (tmp != NULL)
 	{
-		size++;
-		tmp = tmp->next;
+        if (tmp->kind == TK_WORD)
+            size++;
+        if (tmp->kind == TK_INPUT || tmp->kind == TK_DLIMITER)
+            tmp = tmp->next;
+        if (tmp->kind == TK_OUTPUT || tmp->kind == TK_ADD_OUTPUT)
+            tmp = tmp->next;
+        if (tmp != NULL)
+            tmp = tmp->next;
 	}
 	return (size);
 }
 
-void	free_argv_token(char **argv, t_token *tok)
+int free_argv_token(char **argv, t_token *tok)
 {
 	size_t	i;
 	t_token	*tmp;
@@ -41,13 +47,14 @@ void	free_argv_token(char **argv, t_token *tok)
 	}
 	i = 0;
 	if (argv == NULL)
-		return ;
+		return (0);
 	while (argv[i] != NULL)
 	{
 		free(argv[i]);
 		i++;
 	}
 	free(argv);
+    return (0);
 }
 
 size_t	my_strlcat(char *dst, char *src, size_t dstsize)
