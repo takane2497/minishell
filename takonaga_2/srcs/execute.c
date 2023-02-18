@@ -99,8 +99,8 @@ int	interpret(char *const line)
 	{
 		return (free_argv_token(argv, tok) + 1);
 	}
-	last_status = exec(argv);
+	g_last_status = exec(argv);
 	undo_redirect(now_input_fd, now_output_fd);
 	free_argv_token(argv, tok);
-	return (last_status);
+	return (g_last_status);
 }

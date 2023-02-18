@@ -12,14 +12,12 @@
 
 #include "../includes/minishell.h"
 
-int last_status;
-
 int	main(void)
 {
 	char	*line;
 
 	rl_outstream = stderr;
-	last_status = 0;
+	g_last_status = 0;
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -32,10 +30,10 @@ int	main(void)
 		}
 		if (*line)
 			add_history(line);
-		last_status = interpret(line);
+		g_last_status = interpret(line);
 		free(line);
 	}
-	exit(last_status);
+	exit(g_last_status);
 }
 
 // __attribute__((destructor))

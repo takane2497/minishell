@@ -12,17 +12,17 @@
 
 #include "../../includes/minishell.h"
 
-size_t	token_size(t_token *tok)
+size_t	token_size(t_token *tok, size_t *size)
 {
 	t_token	*tmp;
-	size_t	size;
+	size_t	i;
 
 	tmp = tok;
-	size = 0;
+	i = 0;
 	while (tmp != NULL)
 	{
 		if (tmp->kind == TK_WORD)
-			size++;
+			i++;
 		if (tmp->kind == TK_INPUT || tmp->kind == TK_DELIMITER)
 			tmp = tmp->next;
 		if (tmp->kind == TK_OUTPUT || tmp->kind == TK_ADD_OUTPUT)
@@ -30,7 +30,10 @@ size_t	token_size(t_token *tok)
 		if (tmp != NULL)
 			tmp = tmp->next;
 	}
-	return (size);
+	*size = i;
+	if (i == 0)
+		return (1);
+	return (0);
 }
 
 int	free_argv_token(char **argv, t_token *tok)
@@ -76,4 +79,16 @@ size_t	my_strlcat(char *dst, char *src, size_t dstsize)
 	ft_strlcpy(&dst[d_len], src, dstsize - d_len);
 	free(src);
 	return (d_len + s_len);
+}
+
+size_t	init_expansion(char ***argv, t_token **tmp, size_t *i, t_token *tok)
+{
+	size_t	size;
+
+	if (token_size(tok, &size))
+		return (1);
+	*argv = x_calloc((size + 1), sizeof(char *));
+	*tmp = tok->next;
+	*i = 0;
+	return (0);
 }

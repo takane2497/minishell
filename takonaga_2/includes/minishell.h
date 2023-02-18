@@ -41,7 +41,7 @@
 # include <readline/history.h>
 
 typedef struct s_token	t_token;
-extern int 	last_status;
+int						g_last_status;
 
 struct s_token
 {
@@ -81,12 +81,19 @@ char	*get_env_len(char *word, size_t *i, size_t *len);
 
 size_t	get_len_word(char *word);
 
-size_t	token_size(t_token *tok);
+size_t	token_size(t_token *tok, size_t *size);
 int		free_argv_token(char **argv, t_token *tok);
 size_t	my_strlcat(char *dst, char *src, size_t dstsize);
+size_t	init_expansion(char ***argv, t_token **tmp, size_t *i, t_token *tok);
 
 void	fatal_error(const char *msg) __attribute__((noreturn));
 void	err_exit(const char *l, const char *m, int s) __attribute__((noreturn));
 void	err_msg(const char *location, const char *msg);
+
+t_token	*prepare_to_redirect_input(t_token *tmp, int *now_input_fd);
+t_token	*prepare_to_redirect_output(t_token *tmp, int *now_output_fd);
+void	redirect(int *now_input_fd, int *now_output_fd);
+
+char	*remove_quote(char *word);
 
 #endif
