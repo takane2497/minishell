@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-int	last_status;
+int last_status;
 
 int	main(void)
 {
@@ -26,11 +26,10 @@ int	main(void)
 		if (line == NULL)
 			break ;
 		if (!*line)
-        {
-            free(line);
+		{
+			free(line);
 			continue ;
-        }
-
+		}
 		if (*line)
 			add_history(line);
 		last_status = interpret(line);

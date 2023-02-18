@@ -1,45 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takonaga <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/09 18:11:16 by takonaga          #+#    #+#             */
-/*   Updated: 2023/02/09 18:11:19 by takonaga         ###   ########.fr       */
+/*   Created: 2023/02/12 14:01:08 by takonaga          #+#    #+#             */
+/*   Updated: 2023/02/12 14:01:09 by takonaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	last_status;
-
-int	main(void)
+char	*ft_strndup(const char *s1, size_t n)
 {
-	char	*line;
+	char	*p;
+	size_t	i;
 
-	rl_outstream = stderr;
-	last_status = 0;
-	while (1)
+	if (s1 == NULL || n == 0)
+		return (NULL);
+	i = 0;
+	p = malloc(ft_strlen(s1));
+	if (p == NULL)
+		return (NULL);
+	while (s1 && s1[i] && i < n)
 	{
-		line = readline("minishell$ ");
-		if (line == NULL)
-			break ;
-		if (!*line)
-        {
-            free(line);
-			continue ;
-        }
-
-		if (*line)
-			add_history(line);
-		last_status = interpret(line);
-		free(line);
+		p[i] = s1[i];
+		i++;
 	}
-	exit(last_status);
+	p[i] = '\0';
+	return (p);
 }
-
-// __attribute__((destructor))
-// static void destructor() {
-//     system("leaks -q minishell");
-// }

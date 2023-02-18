@@ -71,37 +71,36 @@ int	exec(char *argv[])
 	}
 }
 
-void    undo_redirect(int now_input_fd, int now_output_fd)
+void	undo_redirect(int now_input_fd, int now_output_fd)
 {
-    close(0);
-    close(1);
-    dup2(now_input_fd, 0);
-    dup2(now_output_fd, 1);
-    close(now_input_fd);
-    close(now_output_fd);
-    return ;
+	close(0);
+	close(1);
+	dup2(now_input_fd, 0);
+	dup2(now_output_fd, 1);
+	close(now_input_fd);
+	close(now_output_fd);
+	return ;
 }
 
-int interpret(char *const line)
+int	interpret(char *const line)
 {
 	char	**argv;
 	t_token	*tok;
-    int     now_input_fd;
-    int     now_output_fd;
+	int		now_input_fd;
+	int		now_output_fd;
 
-    now_input_fd = 0;
-    now_output_fd = 1;
+	now_input_fd = 0;
+	now_output_fd = 1;
 	tok = my_tokenizer(line);
 	if (tok == NULL)
-        return (ERROR_TOKENIZE);
+		return (ERROR_TOKENIZE);
 	argv = expansion(tok, &now_input_fd, &now_output_fd);
-	if (argv == NULL)
-    {
-        free_argv_token(NULL, tok);
-		return (1);
-    }
+	if (argv == NULL || now_input_fd == -1)
+	{
+		return (free_argv_token(argv, tok) + 1);
+	}
 	last_status = exec(argv);
-    undo_redirect(now_input_fd, now_output_fd);
+	undo_redirect(now_input_fd, now_output_fd);
 	free_argv_token(argv, tok);
-    return (last_status);
+	return (last_status);
 }

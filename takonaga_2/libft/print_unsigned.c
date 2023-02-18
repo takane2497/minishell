@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_pointer.c                                    :+:      :+:    :+:   */
+/*   print_unsigned.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takonaga <takonaga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/29 03:28:42 by takonaga          #+#    #+#             */
-/*   Updated: 2022/10/29 07:03:30 by takonaga         ###   ########.fr       */
+/*   Created: 2022/10/29 07:49:40 by takonaga          #+#    #+#             */
+/*   Updated: 2022/10/29 09:06:47 by takonaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	pointer_len(uintptr_t nb)
+static int	nb_len(unsigned int nb)
 {
 	int	len;
 
@@ -20,39 +20,43 @@ static int	pointer_len(uintptr_t nb)
 	while (nb != 0)
 	{
 		len++;
-		nb = nb / 16;
+		nb = nb / 10;
 	}
 	return (len);
 }
 
-static	void	put_pointer(int fd, uintptr_t nb)
+static	char	*uitoa(unsigned int n)
 {
-	if (nb >= 16)
+	char	*nb;
+	int		len;
+
+	len = nb_len(n);
+	nb = (char *)malloc(sizeof(char) * (len + 1));
+	if (!nb)
+		return (0);
+	nb[len] = '\0';
+	while (n != 0)
 	{
-		put_pointer(fd, nb / 16);
-		put_pointer(fd, nb % 16);
+		nb[len - 1] = n % 10 + '0';
+		n = n / 10;
+		len--;
 	}
-	else
-	{
-		if (nb <= 9)
-			put_char(fd, (nb + '0'));
-		else
-			put_char(fd, (nb - 10 + 'a'));
-	}
+	return (nb);
 }
 
-int	print_pointer(int fd, uint64_t pointer)
+int	print_unsigned(int fd, unsigned int n)
 {
-	int	len;
+	int		len;
+	char	*nb;
 
 	len = 0;
-	len += write(fd, "0x", 2);
-	if (pointer == 0)
+	if (n == 0)
 		len += write(fd, "0", 1);
 	else
 	{
-		put_pointer(fd, pointer);
-		len += pointer_len(pointer);
+		nb = uitoa(n);
+		len += print_str(fd, nb);
+		free(nb);
 	}
 	return (len);
 }

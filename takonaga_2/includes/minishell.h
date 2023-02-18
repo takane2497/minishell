@@ -18,7 +18,7 @@
 # define TK_PIPE 2
 # define TK_ADD_OUTPUT 3
 # define TK_OUTPUT 4
-# define TK_DLIMITER 5
+# define TK_DELIMITER 5
 # define TK_INPUT 6
 
 # define UNCLOSED 0
@@ -41,8 +41,7 @@
 # include <readline/history.h>
 
 typedef struct s_token	t_token;
-extern int	last_status;
-extern char numstr[NUM_STR_LEN];
+extern int 	last_status;
 
 struct s_token
 {
@@ -53,15 +52,15 @@ struct s_token
 
 typedef struct s_fds
 {
-    int     *input_fds;
-    int     *output_fds;
-    size_t  input_count;
-    size_t  output_count;
-    size_t  input_index;
-    size_t  output_index;
+	int		*input_fds;
+	int		*output_fds;
+	size_t	input_count;
+	size_t	output_count;
+	size_t	input_index;
+	size_t	output_index;
 }t_fds;
 
-int     interpret(char *const line);
+int		interpret(char *const line);
 
 t_token	*my_tokenizer(char *line);
 
@@ -76,17 +75,18 @@ bool	is_alpha_under(char c);
 bool	is_alpha_num_under(char c);
 bool	is_space(char *line, size_t i);
 size_t	is_operator(char *line);
-size_t  get_kinds(char *word);
+size_t	get_kinds(char *word);
 
 char	*get_env_len(char *word, size_t *i, size_t *len);
 
 size_t	get_len_word(char *word);
 
 size_t	token_size(t_token *tok);
-int     free_argv_token(char **argv, t_token *tok);
+int		free_argv_token(char **argv, t_token *tok);
 size_t	my_strlcat(char *dst, char *src, size_t dstsize);
 
 void	fatal_error(const char *msg) __attribute__((noreturn));
 void	err_exit(const char *l, const char *m, int s) __attribute__((noreturn));
+void	err_msg(const char *location, const char *msg);
 
 #endif
