@@ -18,11 +18,15 @@
 # define TK_PIPE 2
 # define TK_ADD_OUTPUT 3
 # define TK_OUTPUT 4
-# define TK_DLIMITER 5
+# define TK_DELIMITER 5
 # define TK_INPUT 6
 
 # define UNCLOSED 0
 # define OPERATOR 1
+
+# define ERROR_TOKENIZE 258
+# define NUM_STR_LEN 4
+# define MAX_LEN 256
 
 # include "../libft/libft.h"
 # include <stdlib.h>
@@ -37,6 +41,7 @@
 # include <readline/history.h>
 
 typedef struct s_token	t_token;
+int						g_last_status;
 
 struct s_token
 {
@@ -57,7 +62,8 @@ typedef struct s_fds
 
 int		interpret(char *const line);
 
-t_token	*my_tokenizer(char *line);
+t_token	*my_tokenizer(char *line, t_token *tok_head);
+t_token	*new_token(char *word);
 
 char	**expansion(t_token *tok, int *now_input_fd, int *now_output_fd);
 
@@ -76,11 +82,19 @@ char	*get_env_len(char *word, size_t *i, size_t *len);
 
 size_t	get_len_word(char *word);
 
-size_t	token_size(t_token *tok);
+size_t	token_size(t_token *tok, size_t *size);
 int		free_argv_token(char **argv, t_token *tok);
-size_t	my_strlcat(char *dst, const char *src, size_t dstsize);
+size_t	my_strlcat(char *dst, char *src, size_t dstsize);
+size_t	init_expansion(char ***argv, t_token **tmp, size_t *i, t_token *tok);
 
 void	fatal_error(const char *msg) __attribute__((noreturn));
 void	err_exit(const char *l, const char *m, int s) __attribute__((noreturn));
+void	err_msg(const char *location, const char *msg);
+
+t_token	*prepare_to_redirect_input(t_token *tmp, int *now_input_fd);
+t_token	*prepare_to_redirect_output(t_token *tmp, int *now_output_fd);
+void	redirect(int *now_input_fd, int *now_output_fd);
+
+char	*remove_quote(char *word);
 
 #endif

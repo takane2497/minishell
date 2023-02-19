@@ -12,18 +12,29 @@
 
 #include "../../includes/minishell.h"
 
+#define ERROR_PREFIX "minishell: "
+
+static void	perror_prefix(void)
+{
+	ft_dprintf(STDERR_FILENO, "%s", ERROR_PREFIX);
+}
+
 void	fatal_error(const char *msg)
 {
-	ft_putstr_fd("Fatal Error: ", 2);
-	ft_putendl_fd((char *)msg, 2);
+	perror_prefix();
+	ft_dprintf(STDERR_FILENO, "Fatal Error: %s\n", msg);
 	exit(1);
 }
 
 void	err_exit(const char *location, const char *msg, int status)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd((char *)location, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd((char *)msg, 2);
+	perror_prefix();
+	ft_dprintf(STDERR_FILENO, "%s: %s\n", location, msg);
 	exit(status);
+}
+
+void	err_msg(const char *location, const char *msg)
+{
+	perror_prefix();
+	ft_dprintf(STDERR_FILENO, "%s: %s\n", location, msg);
 }
