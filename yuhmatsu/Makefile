@@ -1,7 +1,7 @@
 NAME := minishell
 ifeq ($(shell uname), Darwin)
 	CFLAGS +=  -I$(shell brew --prefix readline)/include -g -Wall -Wextra -Werror
-	LDFLAGS += -L$(shell brew --prefix readline)/lib -lreadline -lhistory
+	LDFLAGS += -L$(shell brew --prefix readline)/lib -lreadline #-lhistory
 
 else
 	CFLAGS += -fsanitize=leak -g -Wall -Wextra -Werror
@@ -17,7 +17,7 @@ UTIL_DIR := utils
 UTIL_FILES := x_func.c validate_char.c utils_for_expansion.c error_handling.c
 UTILS := $(addprefix $(UTIL_DIR)/, $(UTIL_FILES))
 
-SRC_FILES := execute.c expansion.c main.c tokenizer.c get_env_len.c get_len_word.c $(UTILS)
+SRC_FILES := execute.c expansion.c main.c tokenizer.c get_env_len.c get_len_word.c redirect.c $(UTILS)
 SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 
 OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIR)%,$(SRCS:.c=.o))

@@ -41,7 +41,7 @@ char	*search_path(const char *filename)
 void	validate_access(const char *path, const char *filename)
 {
 	if (path == NULL)
-		err_exit(filename, "No such file or directory", 127);
+		err_exit(filename, "command not found", 127);
 	if (access(path, F_OK) < 0)
 		err_exit(filename, "command not found", 127);
 }
@@ -84,22 +84,25 @@ void	undo_redirect(int now_input_fd, int now_output_fd)
 
 int	interpret(char *const line)
 {
-	int		status;
 	char	**argv;
 	t_token	*tok;
 	int		now_input_fd;
 	int		now_output_fd;
+	t_token	*tok_head;
 
 	now_input_fd = 0;
 	now_output_fd = 1;
-	tok = my_tokenizer(line);
+	tok_head = new_token(NULL);
+	tok = my_tokenizer(line, tok_head);
 	if (tok == NULL)
-		return (1);
+		return (ERROR_TOKENIZE);
 	argv = expansion(tok, &now_input_fd, &now_output_fd);
-	if (argv == NULL)
-		return (free_argv_token(NULL, tok));
-	status = exec(argv);
+	if (argv == NULL || now_input_fd == -1)
+	{
+		return (free_argv_token(argv, tok) + 1);
+	}
+	g_last_status = exec(argv);
 	undo_redirect(now_input_fd, now_output_fd);
 	free_argv_token(argv, tok);
-	return (status);
+	return (g_last_status);
 }

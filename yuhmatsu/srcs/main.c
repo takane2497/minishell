@@ -14,11 +14,10 @@
 
 int	main(void)
 {
-	int		status;
 	char	*line;
 
 	rl_outstream = stderr;
-	status = 0;
+	g_last_status = 0;
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -31,11 +30,10 @@ int	main(void)
 		}
 		if (*line)
 			add_history(line);
-		status = interpret(line);
+		g_last_status = interpret(line);
 		free(line);
 	}
-	return (0);
-	exit(status);
+	exit(g_last_status);
 }
 
 // __attribute__((destructor))

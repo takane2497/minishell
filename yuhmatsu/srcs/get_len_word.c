@@ -29,7 +29,7 @@ void	get_len_in_double_quote(char *word, size_t *i, size_t *len)
 	while (word[*i] != '\"')
 	{
 		if (word[*i] == '$')
-			get_env_len(word, i, len);
+			free(get_env_len(word, i, len));
 		else
 		{
 			*i += 1;
@@ -49,7 +49,7 @@ size_t	get_len_word(char *word)
 	while (word[i] != '\0')
 	{
 		if (word[i] == '$')
-			get_env_len(word, &i, &len);
+			free(get_env_len(word, &i, &len));
 		else if (word[i] == '\'')
 			get_len_in_singl_quote(word, &i, &len);
 		else if (word[i] == '\"')

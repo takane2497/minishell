@@ -12,17 +12,6 @@
 
 #include "../includes/minishell.h"
 
-t_token	*new_token(size_t kind, char *word)
-{
-	t_token	*tok;
-
-	tok = x_malloc(sizeof(t_token));
-	tok->word = word;
-	tok->next = NULL;
-	tok->kind = kind;
-	return (tok);
-}
-
 //error codeを258にしないといけない
 t_token	*error_hadling_in_tok(char *line, t_token *tok, size_t error_node)
 {
@@ -43,7 +32,7 @@ t_token	*error_hadling_in_tok(char *line, t_token *tok, size_t error_node)
 	return (tok);
 }
 
-size_t	skip_content(char *line, size_t	*tail)
+size_t	skip(char *line, size_t	*tail)
 {
 	char	key_quote;
 
@@ -71,44 +60,47 @@ bool	check_operator_error(t_token *tok)
 	return (false);
 }
 
-t_token	*my_tokenizer(char *line)
+size_t	skip_space_etc(char *line, size_t *head, size_t *tail, t_token **tok)
+{
+	if (*tail != 0)
+	{
+		*tail += is_operator(line + *tail) * (*head == *tail);
+		(*tok)->next = new_token(x_strndup(line + *head, *tail - *head));
+		*tok = (*tok)->next;
+		*head = *tail;
+	}
+	while (is_space(line, *head))
+			*head += 1;
+		*tail = *head;
+	if (line[*head] == '\0')
+		return (1);
+	else
+		return (0);
+}
+
+t_token	*my_tokenizer(char *line, t_token *tok_head)
 {
 	t_token	*tok;
-	t_token	*tok_head;
 	size_t	head;
 	size_t	tail;
 
-	tok_head = new_token(TK_START, NULL);
 	tok = tok_head;
 	head = 0;
+	tail = 0;
 	while (line[head] != '\0')
 	{
-		while (is_space(line, head))
-			head++;
-		tail = head;
-		if (line[head] == '\0')
-			break ;
 		while (line[tail] != '\0' && is_space(line, tail) == 0)
 		{
 			if (is_operator(line + tail) == 3)
 				return (error_hadling_in_tok(line + tail, tok_head, OPERATOR));
-			else if (is_operator(line + tail) && head == tail)
-			{
-				tail += is_operator(line + tail);
+			if (is_operator(line + tail))
 				break ;
-			}
-			else if (is_operator(line + tail))
-				break ;
-			else if ((line[tail] == '\'' || line[tail] == '\"') \
-					&& skip_content(line, &tail))
+			if ((line[tail] == '\'' || line[tail] == '\"') && skip(line, &tail))
 				return (error_hadling_in_tok(line + tail, tok_head, UNCLOSED));
 			tail++;
 		}
-		tok->next = new_token(TK_WORD, x_strndup(line + head, tail - head));
-		tok = tok->next;
-		if (is_operator(tok->word))
-			tok->kind = get_kinds(tok->word);
-		head = tail;
+		if (skip_space_etc(line, &head, &tail, &tok))
+			break ;
 	}
 	if (check_operator_error(tok_head))
 		return (error_hadling_in_tok(line, tok_head, OPERATOR));
