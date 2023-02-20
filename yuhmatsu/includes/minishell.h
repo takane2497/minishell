@@ -41,7 +41,24 @@
 # include <readline/history.h>
 
 typedef struct s_token	t_token;
-int						g_last_status;
+typedef struct s_all	t_all;
+typedef struct s_env	t_env;
+t_all					g_all;
+
+struct s_env
+{
+	char	*name;
+	char	*value;
+	t_env	*next;
+};
+
+struct s_all
+{
+	int		last_status;
+	char	**environ;
+	char	*now_pwd;
+	t_env	*envs;
+};
 
 struct s_token
 {
@@ -96,5 +113,11 @@ t_token	*prepare_to_redirect_output(t_token *tmp, int *now_output_fd);
 void	redirect(int *now_input_fd, int *now_output_fd);
 
 char	*remove_quote(char *word);
+
+size_t	is_builtin(char *command);
+void	exec_in_builtin(char **argv) __attribute__((noreturn));
+
+void	exec_pwd(char **argv);
+void	exec_export(char **argv);
 
 #endif

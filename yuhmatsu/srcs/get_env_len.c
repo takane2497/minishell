@@ -53,9 +53,9 @@ char	*get_special_env(char *word, size_t *i, size_t *len)
 	}
 	if (word[*i] == '?')
 	{
-		if (g_last_status == -1)
+		if (g_all.last_status == -1)
 			return (NULL);
-		numstr = reverse_str(g_last_status, &str_len);
+		numstr = reverse_str(g_all.last_status, &str_len);
 		if (len != NULL)
 			*len += str_len;
 		*i += 1;
