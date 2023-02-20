@@ -28,6 +28,8 @@
 # define NUM_STR_LEN 4
 # define MAX_LEN 256
 
+# define ERROR_PREFIX "minishell: "
+
 # include "../libft/libft.h"
 # include <stdlib.h>
 # include <fcntl.h>
@@ -43,7 +45,7 @@
 typedef struct s_token	t_token;
 typedef struct s_all	t_all;
 typedef struct s_env	t_env;
-t_all					g_all;
+extern t_all			g_all;
 
 struct s_env
 {
@@ -76,6 +78,8 @@ typedef struct s_fds
 	size_t	input_index;
 	size_t	output_index;
 }t_fds;
+
+ssize_t	ft_strchr_pointer(const char *s, char c);
 
 int		interpret(char *const line);
 

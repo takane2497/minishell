@@ -17,7 +17,7 @@ void	*x_malloc(size_t size)
 	void	*tmp;
 
 	tmp = malloc(size);
-	if (tmp == 0)
+	if (tmp == NULL)
 	{
 		perror("malloc");
 		exit(1);
