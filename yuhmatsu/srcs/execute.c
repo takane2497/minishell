@@ -48,7 +48,6 @@ void	validate_access(const char *path, const char *filename)
 
 int	exec(char *argv[])
 {
-	extern char	**environ;
 	const char	*path = argv[0];
 	pid_t		pid;
 	int			wstatus;
@@ -58,11 +57,16 @@ int	exec(char *argv[])
 		fatal_error("fork");
 	else if (pid == 0)
 	{
-		if (ft_strchr(path, '/') == NULL)
-			path = search_path(path);
-		validate_access(path, argv[0]);
-		execve(path, argv, environ);
-		fatal_error("execve");
+		if (is_builtin(argv[0]))
+			exec_in_builtin(argv);
+		else
+		{
+			if (ft_strchr(path, '/') == NULL)
+				path = search_path(path);
+			validate_access(path, argv[0]);
+			execve(path, argv, g_all.environ);
+			fatal_error("execve");
+		}
 	}
 	else
 	{
@@ -101,8 +105,8 @@ int	interpret(char *const line)
 	{
 		return (free_argv_token(argv, tok) + 1);
 	}
-	g_last_status = exec(argv);
+	g_all.last_status = exec(argv);
 	undo_redirect(now_input_fd, now_output_fd);
 	free_argv_token(argv, tok);
-	return (g_last_status);
+	return (g_all.last_status);
 }
