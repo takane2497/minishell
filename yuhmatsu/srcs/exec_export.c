@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 19:31:11 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/20 19:31:12 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/22 01:45:26 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_env	*add_env(char *env_str, ssize_t pointer_to_equal)
 	return (tmp);
 }
 
-size_t	set_env(char *env_str, char *path)
+size_t	set_env(char *env_str, char *new_value)
 {
 	ssize_t	pointer_to_equal;
 	t_env	*env;
@@ -67,15 +67,19 @@ size_t	set_env(char *env_str, char *path)
 	pointer_to_equal = ft_strchr_pointer(env_str, '=');
 	if (pointer_to_equal == 0)
 		return (error_in_export(env_str));
+	if (0 < pointer_to_equal)
+		env_str[pointer_to_equal] = '\0';
 	env = g_all.envs->next;
 	while (env != NULL)
 	{
-		if (ft_strncmp(env_str, env->name, ft_strlen(env->name)) == 0)
+		if (ft_strcmp(env_str, env->name) == 0)
 		{
-			if (0 < pointer_to_equal && path == NULL)
+			if (0 < pointer_to_equal || new_value != NULL)
+				free(env->value);
+			if (0 < pointer_to_equal && new_value == NULL)
 				env->value = x_strdup(env_str + pointer_to_equal + 1);
-			if (path != NULL)
-				env->value = x_strdup(path);
+			if (new_value != NULL)
+				env->value = x_strdup(new_value);
 			return (0);
 		}
 		if (env->next == NULL)

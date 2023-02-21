@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:25:15 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 01:05:00 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/22 01:25:13 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,6 @@ int		exec_export(char **argv);
 int		exec_echo(char **argv);
 int		exec_unset(char **argv);
 
-size_t	set_env(char *env_str, char *path);
+size_t	set_env(char *env_str, char *new_value);
 
 #endif

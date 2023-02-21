@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 22:19:48 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/12 22:19:49 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/22 01:31:58 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,11 @@ size_t	my_strlcat(char *dst, char *src, size_t dstsize)
 	if (dst == NULL)
 		return (0);
 	d_len = ft_strlen(dst);
-	if (src == NULL)
+	if (src == NULL || *src == '\0')
+	{
+		free(src);
 		return (d_len);
+	}
 	s_len = ft_strlen(src);
 	if (dstsize <= d_len)
 	{
