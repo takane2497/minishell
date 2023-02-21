@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 00:42:58 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 01:03:49 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/22 01:11:03 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,5 @@ int	exec_unset(char **argv)
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }
