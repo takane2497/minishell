@@ -59,7 +59,7 @@ t_env	*add_env(char *env_str, ssize_t pointer_to_equal)
 	return (tmp);
 }
 
-size_t	set_env(char *env_str)
+size_t	set_env(char *env_str, char *path)
 {
 	ssize_t	pointer_to_equal;
 	t_env	*env;
@@ -72,8 +72,10 @@ size_t	set_env(char *env_str)
 	{
 		if (ft_strncmp(env_str, env->name, ft_strlen(env->name)) == 0)
 		{
-			if (0 < pointer_to_equal)
+			if (0 < pointer_to_equal && path == NULL)
 				env->value = x_strdup(env_str + pointer_to_equal + 1);
+			if (path != NULL)
+				env->value = x_strdup(path);
 			return (0);
 		}
 		if (env->next == NULL)
@@ -105,6 +107,6 @@ int	exec_export(char **argv)
 	}
 	i = 1;
 	while (argv[i] != NULL)
-		set_env(argv[i++]);
+		set_env(argv[i++], NULL);
 	return (g_all.last_status);
 }
