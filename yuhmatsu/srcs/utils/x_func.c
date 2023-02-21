@@ -17,7 +17,7 @@ void	*x_malloc(size_t size)
 	void	*tmp;
 
 	tmp = malloc(size);
-	if (tmp == 0)
+	if (tmp == NULL)
 	{
 		perror("malloc");
 		exit(1);
@@ -66,4 +66,18 @@ char	*x_strndup(char *str, size_t len)
 		exit(1);
 	}
 	return (line);
+}
+
+char	*x_getenv(char *env_name)
+{
+	t_env	*env;
+
+	env = g_all.envs->next;
+	while (env != NULL)
+	{
+		if (ft_strcmp(env->name, env_name) == 0)
+			return (x_strdup(env->value));
+		env = env->next;
+	}
+	return (NULL);
 }

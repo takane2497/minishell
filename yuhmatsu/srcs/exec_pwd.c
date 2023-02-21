@@ -12,9 +12,9 @@
 
 #include "../includes/minishell.h"
 
-void	exec_pwd(char **argv)
+int	exec_pwd(char **argv)
 {
 	if (ft_strncmp(argv[0], "pwd", 3) == 0)
 		printf("%s\n", g_all.now_pwd);
-	return ;
+	return (0);
 }

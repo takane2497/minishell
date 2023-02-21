@@ -12,8 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-#define ERROR_PREFIX "minishell: "
-
 static void	perror_prefix(void)
 {
 	ft_dprintf(STDERR_FILENO, "%s", ERROR_PREFIX);

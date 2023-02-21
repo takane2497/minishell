@@ -14,18 +14,18 @@
 
 size_t	is_builtin(char *command)
 {
-	if (ft_strncmp(command, "pwd", 3) == 0)
+	if (ft_strcmp(command, "pwd") == 0)
 		return (1);
-	if (ft_strncmp(command, "export", 6) == 0)
+	if (ft_strcmp(command, "export") == 0)
 		return (1);
 	return (0);
 }
 
-void	exec_in_builtin(char **argv)
+int	exec_in_builtin(char **argv)
 {
-	if (ft_strncmp(argv[0], "pwd", 3) == 0)
-		exec_pwd(argv);
-	if (ft_strncmp(argv[0], "export", 6) == 0)
-		exec_export(argv);
-	exit(0);
+	if (ft_strcmp(argv[0], "pwd") == 0)
+		return (exec_pwd(argv));
+	if (ft_strcmp(argv[0], "export") == 0)
+		return (exec_export(argv));
+	return (1);
 }
