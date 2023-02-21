@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 18:07:04 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 01:05:35 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/22 02:08:46 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ size_t	is_builtin(char *command)
 		return (1);
 	if (ft_strcmp(command, "unset") == 0)
 		return (1);
+	if (ft_strcmp(command, "env") == 0)
+		return (1);
 	return (0);
 }
 
@@ -35,5 +37,7 @@ int	exec_in_builtin(char **argv)
 		return (exec_echo(argv));
 	if (ft_strcmp(argv[0], "unset") == 0)
 		return (exec_unset(argv));
+	if (ft_strcmp(argv[0], "env") == 0)
+		return (exec_env());
 	return (1);
 }
