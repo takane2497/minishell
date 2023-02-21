@@ -92,6 +92,7 @@ void	*x_malloc(size_t size);
 void	*x_calloc(size_t count, size_t size);
 char	*x_strdup(char *str);
 char	*x_strndup(char *str, size_t len);
+char	*x_getenv(char *env_name);
 
 bool	is_alpha_under(char c);
 bool	is_alpha_num_under(char c);
@@ -119,9 +120,9 @@ void	redirect(int *now_input_fd, int *now_output_fd);
 char	*remove_quote(char *word);
 
 size_t	is_builtin(char *command);
-void	exec_in_builtin(char **argv) __attribute__((noreturn));
+int		exec_in_builtin(char **argv);
 
-void	exec_pwd(char **argv);
-void	exec_export(char **argv);
+int		exec_pwd(char **argv);
+int		exec_export(char **argv);
 
 #endif

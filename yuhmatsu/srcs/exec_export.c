@@ -17,9 +17,8 @@
 
 size_t	error_in_export(char *env_str)
 {
-	//上手く反映されない
 	g_all.last_status = 1;
-	ft_dprintf(STDERR_FILENO, "%s%s\'%s\'%s\n", \
+	ft_dprintf(STDERR_FILENO, "%s%s\'%s\': %s\n", \
 				ERROR_PREFIX, EXPORT, env_str, INVALID_EXPORT);
 	return (1);
 }
@@ -29,6 +28,8 @@ ssize_t	ft_strchr_pointer(const char *s, char c)
 	ssize_t	i;
 
 	i = 0;
+	if (*s == '\0')
+		return (0);
 	while (s[i] != '\0')
 	{
 		if (s[i] == c)
@@ -40,16 +41,11 @@ ssize_t	ft_strchr_pointer(const char *s, char c)
 	return (-1);
 }
 
-size_t	add_env(char *env_str)
+t_env	*add_env(char *env_str, ssize_t pointer_to_equal)
 {
-	ssize_t	pointer_to_equal;
-	t_env	*env;
 	t_env	*tmp;
 
-	pointer_to_equal = ft_strchr_pointer(env_str, '=');
-	if (pointer_to_equal == 0)
-		return (error_in_export(env_str));
-	tmp = x_malloc(sizeof(t_env));
+	tmp = x_calloc(1, sizeof(t_env));
 	if (pointer_to_equal < 0)
 	{
 		tmp->name = x_strdup(env_str);
@@ -60,18 +56,40 @@ size_t	add_env(char *env_str)
 		tmp->name = x_strndup(env_str, pointer_to_equal);
 		tmp->value = x_strdup(env_str + pointer_to_equal + 1);
 	}
-	env = g_all.envs;
+	return (tmp);
+}
+
+size_t	set_env(char *env_str)
+{
+	ssize_t	pointer_to_equal;
+	t_env	*env;
+
+	pointer_to_equal = ft_strchr_pointer(env_str, '=');
+	if (pointer_to_equal == 0)
+		return (error_in_export(env_str));
+	env = g_all.envs->next;
 	while (env != NULL)
+	{
+		if (ft_strncmp(env_str, env->name, ft_strlen(env->name)) == 0)
+		{
+			if (0 < pointer_to_equal)
+				env->value = x_strdup(env_str + pointer_to_equal + 1);
+			return (0);
+		}
+		if (env->next == NULL)
+			break ;
 		env = env->next;
-	env->next = tmp;
+	}
+	env->next = add_env(env_str, pointer_to_equal);
 	return (0);
 }
 
-void	exec_export(char **argv)
+int	exec_export(char **argv)
 {
 	t_env	*env;
 	size_t	i;
 
+	g_all.last_status = 0;
 	env = g_all.envs->next;
 	if (argv[1] == NULL)
 	{
@@ -83,10 +101,10 @@ void	exec_export(char **argv)
 				printf("declare -x %s=\"%s\"\n", env->name, env->value);
 			env = env->next;
 		}
-		return ;
+		return (g_all.last_status);
 	}
 	i = 1;
-	//上手くいってない、、？
 	while (argv[i] != NULL)
-		add_env(argv[i++]);
+		set_env(argv[i++]);
+	return (g_all.last_status);
 }

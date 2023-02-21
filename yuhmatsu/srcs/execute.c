@@ -52,21 +52,18 @@ int	exec(char *argv[])
 	pid_t		pid;
 	int			wstatus;
 
+	if (is_builtin(argv[0]))
+		return (exec_in_builtin(argv));
 	pid = fork();
 	if (pid < 0)
 		fatal_error("fork");
 	else if (pid == 0)
 	{
-		if (is_builtin(argv[0]))
-			exec_in_builtin(argv);
-		else
-		{
-			if (ft_strchr(path, '/') == NULL)
-				path = search_path(path);
-			validate_access(path, argv[0]);
-			execve(path, argv, g_all.environ);
-			fatal_error("execve");
-		}
+		if (ft_strchr(path, '/') == NULL)
+			path = search_path(path);
+		validate_access(path, argv[0]);
+		execve(path, argv, g_all.environ);
+		fatal_error("execve");
 	}
 	else
 	{

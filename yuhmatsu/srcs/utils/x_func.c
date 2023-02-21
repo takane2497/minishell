@@ -67,3 +67,17 @@ char	*x_strndup(char *str, size_t len)
 	}
 	return (line);
 }
+
+char	*x_getenv(char *env_name)
+{
+	t_env	*env;
+
+	env = g_all.envs->next;
+	while (env != NULL)
+	{
+		if (ft_strcmp(env->name, env_name) == 0)
+			return (x_strdup(env->value));
+		env = env->next;
+	}
+	return (NULL);
+}
