@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_cd.c                                          :+:      :+:    :+:   */
+/*   exec_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/22 01:19:37 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 02:00:52 by yuhmatsu         ###   ########.fr       */
+/*   Created: 2023/02/22 02:03:28 by yuhmatsu          #+#    #+#             */
+/*   Updated: 2023/02/22 02:12:06 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-int	exec_cd(char **argv)
+int	exec_env(void)
 {
-	char	*old_pwd;
-	char	*pwd;
+	t_env	*env;
 
-	if (argv[1] == NULL)
+	env = g_all.envs->next;
+	while (env != NULL)
 	{
-		pwd = x_getenv("HOME");
-		if (pwd == NULL)
-			//処理書かないと
+		if (env->value != NULL && ft_strcmp(env->name, "_") != 0)
+			printf("%s=%s\n", env->name, env->value);
+		env = env->next;
 	}
-	old_pwd = x_getenv("PWD");
-	if (old_pwd == NULL)
-		old_pwd = x_calloc(1, sizeof(char));
-	set_env("OLDPWD", old_pwd);
+	printf("_=/usr/bin/env\n");
+	return (0);
 }

@@ -1,28 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_env.c                                         :+:      :+:    :+:   */
+/*   exec_unset.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/22 02:03:28 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 02:12:06 by yuhmatsu         ###   ########.fr       */
+/*   Created: 2023/02/22 00:42:58 by yuhmatsu          #+#    #+#             */
+/*   Updated: 2023/02/22 01:14:09 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-int	exec_env(void)
+int	exec_unset(char **argv)
 {
 	t_env	*env;
+	t_env	*tmp;
+	size_t	i;
 
-	env = g_all.envs->next;
-	while (env != NULL)
+	i = 1;
+	while (argv[i] != NULL)
 	{
-		if (env->value != NULL && ft_strcmp(env->name, "_") != 0)
-			printf("%s=%s\n", env->name, env->value);
-		env = env->next;
+		env = g_all.envs;
+		while (env->next != NULL)
+		{
+			if (ft_strcmp(argv[i], env->next->name) == 0)
+			{
+				tmp = env->next->next;
+				free(env->next->name);
+				free(env->next->value);
+				free(env->next);
+				env->next = tmp;
+				break ;
+			}
+			env = env->next;
+		}
+		i++;
 	}
-	printf("_=/usr/bin/env\n");
 	return (0);
 }

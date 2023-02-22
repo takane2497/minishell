@@ -12,12 +12,16 @@ LIBFT := ./libft
 SRCS_DIR := ./srcs
 OBJS_DIR := ./objs
 UTIL_DIR := utils
+EXEC_DIR := exec
 
 
 UTIL_FILES := x_func.c validate_char.c utils_for_expansion.c error_handling.c
 UTILS := $(addprefix $(UTIL_DIR)/, $(UTIL_FILES))
 
-SRC_FILES := execute.c expansion.c main.c tokenizer.c get_env_len.c get_len_word.c redirect.c exec_builtin.c exec_export.c exec_pwd.c exec_echo.c exec_unset.c exec_env.c $(UTILS)
+EXEC_FILES := exec_builtin.c exec_export.c exec_pwd.c exec_echo.c exec_unset.c exec_env.c exec_cd.c exec_cd_utils.c
+EXEC := $(addprefix $(EXEC_DIR)/, $(EXEC_FILES))
+
+SRC_FILES := execute.c expansion.c main.c tokenizer.c get_env_len.c get_len_word.c redirect.c $(UTILS) $(EXEC)
 SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 
 OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIR)%,$(SRCS:.c=.o))

@@ -127,6 +127,13 @@ int		exec_export(char **argv);
 int		exec_echo(char **argv);
 int		exec_unset(char **argv);
 int		exec_env(void);
+int		exec_cd(char **argv);
+
+void	init_current_dir1(char *new_pwd, size_t *i, size_t *j);
+void	init_current_dir2(char *new_pwd, char *pwd, size_t *i, size_t *j);
+void	move_back_dir(char *new_pwd, size_t *flag, size_t *i, size_t *j);
+void	stay_dir(char *pwd, size_t *j);
+void	handle_slash(size_t	*flag, size_t *j);
 
 size_t	set_env(char *env_str, char *new_value);
 
