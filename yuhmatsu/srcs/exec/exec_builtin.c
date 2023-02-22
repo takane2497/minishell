@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 size_t	is_builtin(char *command)
 {
@@ -23,6 +23,8 @@ size_t	is_builtin(char *command)
 	if (ft_strcmp(command, "unset") == 0)
 		return (1);
 	if (ft_strcmp(command, "env") == 0)
+		return (1);
+	if (ft_strcmp(command, "cd") == 0)
 		return (1);
 	return (0);
 }
@@ -39,5 +41,7 @@ int	exec_in_builtin(char **argv)
 		return (exec_unset(argv));
 	if (ft_strcmp(argv[0], "env") == 0)
 		return (exec_env());
+	if (ft_strcmp(argv[0], "cd") == 0)
+		return (exec_cd(argv));
 	return (1);
 }

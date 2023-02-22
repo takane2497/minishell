@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 #define EXPORT "export: "
 #define INVALID_EXPORT "not a valid identifier"
@@ -70,7 +70,7 @@ size_t	set_env(char *env_str, char *new_value)
 	if (0 < pointer_to_equal)
 		env_str[pointer_to_equal] = '\0';
 	env = g_all.envs->next;
-	while (env != NULL)
+	while (env->next != NULL || ft_strcmp(env_str, env->name) == 0)
 	{
 		if (ft_strcmp(env_str, env->name) == 0)
 		{
@@ -82,8 +82,6 @@ size_t	set_env(char *env_str, char *new_value)
 				env->value = x_strdup(new_value);
 			return (0);
 		}
-		if (env->next == NULL)
-			break ;
 		env = env->next;
 	}
 	env->next = add_env(env_str, pointer_to_equal);
