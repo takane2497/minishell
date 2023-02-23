@@ -107,3 +107,15 @@ int	interpret(char *const line)
 	free_argv_token(argv, tok);
 	return (g_all.last_status);
 }
+
+
+	// while ()
+	// {
+	// 	argv = expansion(&tok, &now_input_fd, &now_output_fd);
+	// 	if (argv == NULL || now_input_fd == -1)
+	// 	{
+	// 		return (free_argv_token(argv, tok) + 1);
+	// 	}
+	// 	g_all.last_status = exec(argv);
+	// 	free(argv);
+	// }
