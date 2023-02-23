@@ -128,6 +128,7 @@ int		exec_echo(char **argv);
 int		exec_unset(char **argv);
 int		exec_env(void);
 int		exec_cd(char **argv);
+int		exec_exit(char **argv);
 
 void	init_current_dir1(char *new_pwd, size_t *i, size_t *j);
 void	init_current_dir2(char *new_pwd, char *pwd, size_t *i, size_t *j);

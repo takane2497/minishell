@@ -26,6 +26,8 @@ size_t	is_builtin(char *command)
 		return (1);
 	if (ft_strcmp(command, "cd") == 0)
 		return (1);
+	if (ft_strcmp(command, "exit") == 0)
+		return (1);
 	return (0);
 }
 
@@ -43,5 +45,7 @@ int	exec_in_builtin(char **argv)
 		return (exec_env());
 	if (ft_strcmp(argv[0], "cd") == 0)
 		return (exec_cd(argv));
+	if (ft_strcmp(argv[0], "exit") == 0)
+		return (exec_exit(argv));
 	return (1);
 }
