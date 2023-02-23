@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 22:22:55 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 22:22:58 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/23 11:11:13 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	move_back_dir(char *new_pwd, size_t *flag, size_t *i, size_t *j)
 	while (0 < *i && new_pwd[*i] != '/')
 		*i -= 1;
 	*j += 3;
-	*flag = 0;
+	*flag = 1;
 }
 
 void	stay_dir(char *pwd, size_t *j)
