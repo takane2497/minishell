@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 22:42:56 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 22:43:15 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/26 12:12:57 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	exec_exit(char **argv)
 {
 	int	status;
 
-	printf("exit\n");
+	ft_dprintf(STDERR_FILENO, "exit\n");
 	if (argv[1] == NULL)
 		exit(g_all.last_status);
 	if (minishell_atol(argv[1], &status))

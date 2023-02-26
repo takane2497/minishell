@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 09:35:00 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/26 10:49:23 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/26 11:11:29 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ int	exec(char *argv[], size_t i, size_t num_pipe)
 	}
 	else
 	{
+		if (old_pipe_input_fd != 0)
+			close(old_pipe_input_fd);
 		if (i < num_pipe)
 		{
 			old_pipe_input_fd = pfd[0];
