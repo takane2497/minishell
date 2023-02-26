@@ -46,15 +46,22 @@ void	validate_access(const char *path, const char *filename)
 		err_exit(filename, "command not found", 127);
 }
 
-int	exec(char *argv[], size_t *i, size_t num_pipe)
+void	exec_in_nonbuiltin(char **argv, int now_input_fd, int now_output_fd, const char *path)
+{
+	if (now_input_fd != -1)
+		redirect(&now_input_fd, &now_output_fd);
+	execve(path, argv, g_all.environ);
+	undo_redirect(now_input_fd, now_output_fd);
+}
+
+int	exec(char *argv[], size_t *i, size_t num_pipe, int now_input_fd, int now_output_fd, int *old_pipe_input_fd)
 {
 	const char	*path = argv[0];
 	pid_t		pid;
 	int			pfd[2];
-	static int	old_pipe_input_fd;
 
 	if (is_builtin(argv[0]) && num_pipe == 0)
-		return (exec_in_builtin(argv));
+		return (exec_in_builtin(argv, now_input_fd, now_output_fd));
 	if (*i < num_pipe && pipe(pfd) < 0)
 		fatal_error("pipe");
 	pid = fork();
@@ -62,10 +69,10 @@ int	exec(char *argv[], size_t *i, size_t num_pipe)
 		fatal_error("fork");
 	else if (pid == 0)
 	{
-		if (old_pipe_input_fd != 0)
+		if (*old_pipe_input_fd != 0)
 		{
-			dup2(old_pipe_input_fd, 0);
-			close(old_pipe_input_fd);
+			dup2(*old_pipe_input_fd, 0);
+			close(*old_pipe_input_fd);
 		}
 		if (*i < num_pipe)
 		{
@@ -73,28 +80,25 @@ int	exec(char *argv[], size_t *i, size_t num_pipe)
 			close(pfd[1]);
 			close(pfd[0]);
 		}
-
 		if (is_builtin(argv[0]))
-			exit(exec_in_builtin(argv));
+			exit(exec_in_builtin(argv, now_input_fd, now_output_fd));
 		if (ft_strchr(path, '/') == NULL)
 			path = search_path(path);
 		validate_access(path, argv[0]);
-		execve(path, argv, g_all.environ);
+		exec_in_nonbuiltin(argv, now_input_fd, now_output_fd, path);
 		fatal_error("execve");
 	}
 	else
 	{
-		if (old_pipe_input_fd != 0)
-			close(old_pipe_input_fd);
+		if (*old_pipe_input_fd != 0)
+			close(*old_pipe_input_fd);
 		if (*i < num_pipe)
 		{
-			old_pipe_input_fd = pfd[0];
+			*old_pipe_input_fd = pfd[0];
 			close(pfd[1]);
 		}
 		*i += 1;
 		return (0);
-		// wait(&wstatus);
-		// return (WEXITSTATUS(wstatus));
 	}
 }
 
@@ -148,25 +152,27 @@ int	interpret(char *const line)
 	t_token	*tok;
 	int		now_input_fd;
 	int		now_output_fd;
+	int 	old_pipe_input_fd;
 	t_token	*tok_head;
 	size_t	num_pipe;
 	size_t	i;
 
 	i = 0;
-	now_input_fd = 0;
-	now_output_fd = 1;
 	tok_head = new_token(NULL);
 	tok = my_tokenizer(line, tok_head);
 	if (tok == NULL)
 		return (ERROR_TOKENIZE);
 	num_pipe = count_pipe(tok_head);
+	old_pipe_input_fd = 0;
 	while (tok != NULL)
 	{
+		now_input_fd = 0;
+		now_output_fd = 1;
 		argv = expansion(&tok, &now_input_fd, &now_output_fd);
 		if (argv == NULL || now_input_fd == -1)
 			return (free_argv_token(argv, tok_head) + 1);
-		g_all.last_status = exec(argv, &i, num_pipe);
-		undo_redirect(now_input_fd, now_output_fd);
+		g_all.last_status = exec(argv, &i, num_pipe, now_input_fd, now_output_fd, &old_pipe_input_fd);
+//		undo_redirect(now_input_fd, now_output_fd);
 		// free(argv);
 	}
 	g_all.last_status = all_wait(i);
