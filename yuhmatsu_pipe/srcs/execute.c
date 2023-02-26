@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 09:35:00 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/25 20:52:10 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/26 10:49:23 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,22 @@ int	exec(char *argv[], size_t i, size_t num_pipe)
 	pid_t		pid;
 	int			wstatus;
 	int			pfd[2];
+	static int	old_pipe_input_fd;
 
 	if (is_builtin(argv[0]) && num_pipe == 0)
 		return (exec_in_builtin(argv));
-	if (num_pipe != 0 && pipe(pfd) < 0)
+	if (i < num_pipe && pipe(pfd) < 0)
 		fatal_error("pipe");
 	pid = fork();
 	if (pid < 0)
 		fatal_error("fork");
 	else if (pid == 0)
 	{
+		if (old_pipe_input_fd != 0)
+		{
+			dup2(old_pipe_input_fd, 0);
+			close(old_pipe_input_fd);
+		}
 		if (i < num_pipe)
 		{
 			dup2(pfd[1], 1);
@@ -80,9 +86,8 @@ int	exec(char *argv[], size_t i, size_t num_pipe)
 	{
 		if (i < num_pipe)
 		{
-			dup2(pfd[0], 0);
+			old_pipe_input_fd = pfd[0];
 			close(pfd[1]);
-			close(pfd[0]);
 		}
 		wait(&wstatus);
 		return (WEXITSTATUS(wstatus));
