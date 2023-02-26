@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 09:35:00 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/26 11:11:29 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/26 12:26:22 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	validate_access(const char *path, const char *filename)
 		err_exit(filename, "command not found", 127);
 }
 
-int	exec(char *argv[], size_t i, size_t num_pipe)
+int	exec(char *argv[], size_t *i, size_t num_pipe)
 {
 	const char	*path = argv[0];
 	pid_t		pid;
@@ -56,7 +56,7 @@ int	exec(char *argv[], size_t i, size_t num_pipe)
 
 	if (is_builtin(argv[0]) && num_pipe == 0)
 		return (exec_in_builtin(argv));
-	if (i < num_pipe && pipe(pfd) < 0)
+	if (*i < num_pipe && pipe(pfd) < 0)
 		fatal_error("pipe");
 	pid = fork();
 	if (pid < 0)
@@ -68,7 +68,7 @@ int	exec(char *argv[], size_t i, size_t num_pipe)
 			dup2(old_pipe_input_fd, 0);
 			close(old_pipe_input_fd);
 		}
-		if (i < num_pipe)
+		if (*i < num_pipe)
 		{
 			dup2(pfd[1], 1);
 			close(pfd[1]);
@@ -86,13 +86,15 @@ int	exec(char *argv[], size_t i, size_t num_pipe)
 	{
 		if (old_pipe_input_fd != 0)
 			close(old_pipe_input_fd);
-		if (i < num_pipe)
+		if (*i < num_pipe)
 		{
 			old_pipe_input_fd = pfd[0];
 			close(pfd[1]);
+			*i += 1;
 		}
-		wait(&wstatus);
-		return (WEXITSTATUS(wstatus));
+		return (0);
+		// wait(&wstatus);
+		// return (WEXITSTATUS(wstatus));
 	}
 }
 
@@ -146,11 +148,11 @@ int	interpret(char *const line)
 		{
 			return (free_argv_token(argv, tok_head) + 1);
 		}
-		g_all.last_status = exec(argv, i, num_pipe);
+		g_all.last_status = exec(argv, &i, num_pipe);
 		undo_redirect(now_input_fd, now_output_fd);
-		i++;
 		// free(argv);
 	}
+	g_all.last_status = all_wait(i);
 	free_argv_token(argv, tok_head);
 	return (g_all.last_status);
 }
