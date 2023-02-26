@@ -63,7 +63,7 @@ int	exec_exit(char **argv)
 {
 	int	status;
 
-	printf("exit\n");
+	ft_dprintf(STDERR_FILENO, "exit\n");
 	if (argv[1] == NULL)
 		exit(g_all.last_status);
 	if (minishell_atol(argv[1], &status))

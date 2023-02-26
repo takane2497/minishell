@@ -132,7 +132,7 @@ int	all_wait(size_t	i)
 	int		wstatus;
 	pid_t	pid;
 
-	printf("now:%ld\n", i);
+//	printf("now:%ld\n", i);
 	while (i)
 	{
 		pid = wait(&wstatus);
@@ -175,7 +175,8 @@ int	interpret(char *const line)
 //		undo_redirect(now_input_fd, now_output_fd);
 		// free(argv);
 	}
-	g_all.last_status = all_wait(i);
+	if (0 < i)
+		g_all.last_status = all_wait(i);
 	free_argv_token(argv, tok_head);
 	return (g_all.last_status);
 }

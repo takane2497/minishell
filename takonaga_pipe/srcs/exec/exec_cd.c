@@ -116,5 +116,5 @@ int	exec_cd(char **argv)
 	if (ft_strcmp(argv[1], "-") == 0)
 		printf("%s\n", pwd);
 	set_pwd_to_env_and_free(pwd);
-	return (1);
+	return (0);
 }
