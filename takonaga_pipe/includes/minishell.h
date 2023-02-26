@@ -116,11 +116,12 @@ void	err_msg(const char *location, const char *msg);
 t_token	*prepare_to_redirect_input(t_token *tmp, int *now_input_fd);
 t_token	*prepare_to_redirect_output(t_token *tmp, int *now_output_fd);
 void	redirect(int *now_input_fd, int *now_output_fd);
+void	undo_redirect(int now_input_fd, int now_output_fd);
 
 char	*remove_quote(char *word);
 
 size_t	is_builtin(char *command);
-int		exec_in_builtin(char **argv);
+int		exec_in_builtin(char **argv, int now_input_fd, int now_output_fd);
 
 int		exec_pwd(char **argv);
 int		exec_export(char **argv);

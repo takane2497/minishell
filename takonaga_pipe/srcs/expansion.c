@@ -108,7 +108,7 @@ char	**expansion(t_token **tok, int *now_input_fd, int *now_output_fd)
 		}
 	}
 	*tok = tmp;
-	if (*now_input_fd != -1)
-		redirect(now_input_fd, now_output_fd);
+//	if (*now_input_fd != -1)
+//		redirect(now_input_fd, now_output_fd);
 	return (argv);
 }
