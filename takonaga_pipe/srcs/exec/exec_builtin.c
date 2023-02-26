@@ -35,7 +35,7 @@ int	exec_in_builtin(char **argv, int now_input_fd, int now_output_fd)
 {
 	int	status;
 
-	printf("now_input:%d\nnow_output:%d\n", now_input_fd, now_output_fd);
+//	printf("now_input:%d\nnow_output:%d\n", now_input_fd, now_output_fd);
 	if (now_input_fd != -1)
 		redirect(&now_input_fd, &now_output_fd);
 	if (ft_strcmp(argv[0], "pwd") == 0)

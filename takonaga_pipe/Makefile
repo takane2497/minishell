@@ -1,6 +1,6 @@
 NAME := minishell
 ifeq ($(shell uname), Darwin)
-	CFLAGS +=  -I$(shell brew --prefix readline)/include -g -Wall -Wextra -Werror
+	CFLAGS +=  -I$(shell brew --prefix readline)/include -g3 -Wall -Wextra -Werror
 	LDFLAGS += -L$(shell brew --prefix readline)/lib -lreadline #-lhistory
 
 else
