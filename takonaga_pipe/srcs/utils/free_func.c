@@ -36,23 +36,6 @@ int	free_argv_token(char **argv, t_token *tok)
 	return (0);
 }
 
-int	free_node_token(t_node *node, t_token *tok)
-{
-	free_node(node);
-	free_tok(tok);
-	return (0);
-}
-
-void	free_node(t_node *node)
-{
-	if (node == NULL)
-		return ;
-	free_tok(node->args);
-	free_node(node->next);
-	free_node(node->command);
-	free(node);
-}
-
 void	free_tok(t_token *tok)
 {
 	t_token	*tmp;

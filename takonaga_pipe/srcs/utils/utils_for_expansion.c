@@ -52,30 +52,6 @@ size_t	token_size(t_token *tok, size_t *size)
 	return (0);
 }
 
-int	free_argv_token(char **argv, t_token *tok)
-{
-	size_t	i;
-	t_token	*tmp;
-
-	while (tok != NULL)
-	{
-		free(tok->word);
-		tmp = tok->next;
-		free(tok);
-		tok = tmp;
-	}
-	i = 0;
-	if (argv == NULL)
-		return (0);
-	while (argv[i] != NULL)
-	{
-		free(argv[i]);
-		i++;
-	}
-	free(argv);
-	return (0);
-}
-
 size_t	my_strlcat(char *dst, char *src, size_t dstsize)
 {
 	size_t	d_len;

@@ -72,6 +72,35 @@ void	init_global(void)
 	}
 }
 
+int	interpret(char *const line)
+{
+	char	**argv;
+	t_token	*tok;
+	t_token	*tok_head;
+	t_fds	fds;
+
+	fds.i = 0;
+	tok_head = new_token(NULL);
+	tok = my_tokenizer(line, tok_head);
+	if (tok == NULL)
+		return (ERROR_TOKENIZE);
+	fds.num_pipe = count_pipe(tok_head);
+	while (tok != NULL)
+	{
+		fds.now_input_fd = 0;
+		fds.now_output_fd = 1;
+		argv = expansion(&tok, &fds.now_input_fd, &fds.now_output_fd);
+		if (argv == NULL || fds.now_input_fd == -1)
+			return (free_argv_token(argv, tok_head) + 1);
+		g_all.last_status = exec(argv, &fds.i, &fds);
+		free_argv(argv);
+	}
+	if (0 < fds.i)
+		g_all.last_status = all_wait(fds.i);
+	free_tok(tok_head);
+	return (g_all.last_status);
+}
+
 int	main(void)
 {
 	char	*line;

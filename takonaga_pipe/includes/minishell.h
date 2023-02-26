@@ -45,6 +45,7 @@
 typedef struct s_token	t_token;
 typedef struct s_all	t_all;
 typedef struct s_env	t_env;
+typedef struct s_fds	t_fds;
 extern t_all			g_all;
 
 struct s_env
@@ -69,19 +70,24 @@ struct s_token
 	t_token	*next;
 };
 
-typedef struct s_fds
+struct s_fds
 {
-	int		*input_fds;
-	int		*output_fds;
-	size_t	input_count;
-	size_t	output_count;
-	size_t	input_index;
-	size_t	output_index;
-}t_fds;
+	int		now_input_fd;
+	int		now_output_fd;
+	int		old_pipe_input_fd;
+	size_t	num_pipe;
+	size_t	i;
+};
 
 ssize_t	ft_strchr_pointer(const char *s, char c);
 
 int		interpret(char *const line);
+int		exec(char *argv[], size_t *i, t_fds *fds);
+char	*search_path(const char *filename);
+void	validate_access(const char *path, const char *filename);
+
+size_t	count_pipe(t_token *tok);
+int		all_wait(size_t	i);
 
 t_token	*my_tokenizer(char *line, t_token *tok_head);
 t_token	*new_token(char *word);
@@ -138,5 +144,8 @@ void	stay_dir(char *pwd, size_t *j);
 void	handle_slash(size_t	*flag, size_t *j);
 
 size_t	set_env(char *env_str, char *new_value);
+
+void	free_argv(char **argv);
+void	free_tok(t_token *tok);
 
 #endif
