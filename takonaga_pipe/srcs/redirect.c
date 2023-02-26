@@ -82,13 +82,24 @@ t_token	*prepare_to_redirect_output(t_token *tmp, int *now_output_fd)
 
 void	redirect(int *now_input_fd, int *now_output_fd)
 {
-	int	tmp_intput_fd;
+	int	tmp_input_fd;
 	int	tmp_output_fd;
 
-	tmp_intput_fd = dup(0);
+	tmp_input_fd = dup(0);
 	tmp_output_fd = dup(1);
 	dup2(*now_input_fd, 0);
 	dup2(*now_output_fd, 1);
-	*now_input_fd = tmp_intput_fd;
+	*now_input_fd = tmp_input_fd;
 	*now_output_fd = tmp_output_fd;
+}
+
+void	undo_redirect(int now_input_fd, int now_output_fd)
+{
+	close(0);
+	close(1);
+	dup2(now_input_fd, 0);
+	dup2(now_output_fd, 1);
+	close(now_input_fd);
+	close(now_output_fd);
+	return ;
 }
