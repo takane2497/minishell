@@ -1,7 +1,7 @@
 NAME := minishell
 ifeq ($(shell uname), Darwin)
 	CFLAGS +=  -I$(shell brew --prefix readline)/include -g -Wall -Wextra -Werror
-	LDFLAGS += -L$(shell brew --prefix readline)/lib -lreadline #-lhistory
+	LDFLAGS += -L$(shell brew --prefix readline)/lib -lreadline -lhistory
 
 else
 	CFLAGS += -fsanitize=leak -g -Wall -Wextra -Werror
@@ -15,13 +15,13 @@ UTIL_DIR := utils
 EXEC_DIR := exec
 
 
-UTIL_FILES := x_func.c validate_char.c utils_for_expansion.c error_handling.c
+UTIL_FILES := x_func.c validate_char.c utils_for_expansion.c error_handling.c free_func.c utils_for_execute.c
 UTILS := $(addprefix $(UTIL_DIR)/, $(UTIL_FILES))
 
 EXEC_FILES := exec_builtin.c exec_export.c exec_pwd.c exec_echo.c exec_unset.c exec_env.c exec_cd.c exec_cd_utils.c exec_exit.c
 EXEC := $(addprefix $(EXEC_DIR)/, $(EXEC_FILES))
 
-SRC_FILES := execute.c expansion.c main.c tokenizer.c get_env_len.c get_len_word.c redirect.c $(UTILS) $(EXEC)
+SRC_FILES := execute.c expansion.c main.c tokenizer.c get_env_len.c get_len_word.c redirect.c signal.c heredoc.c $(UTILS) $(EXEC)
 SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 
 OBJS := $(patsubst $(SRCS_DIR)%,$(OBJS_DIR)%,$(SRCS:.c=.o))

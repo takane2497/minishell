@@ -33,9 +33,9 @@ size_t	token_size(t_token *tok, size_t *size)
 	t_token	*tmp;
 	size_t	i;
 
-	tmp = tok;
-	i = 0;
-	while (tmp != NULL)
+	tmp = tok->next;
+	i = 1;
+	while (tmp != NULL && tmp->kind != TK_PIPE)
 	{
 		if (tmp->kind == TK_WORD)
 			i++;
@@ -49,30 +49,6 @@ size_t	token_size(t_token *tok, size_t *size)
 	*size = i;
 	if (i == 0)
 		return (1);
-	return (0);
-}
-
-int	free_argv_token(char **argv, t_token *tok)
-{
-	size_t	i;
-	t_token	*tmp;
-
-	while (tok != NULL)
-	{
-		free(tok->word);
-		tmp = tok->next;
-		free(tok);
-		tok = tmp;
-	}
-	i = 0;
-	if (argv == NULL)
-		return (0);
-	while (argv[i] != NULL)
-	{
-		free(argv[i]);
-		i++;
-	}
-	free(argv);
 	return (0);
 }
 

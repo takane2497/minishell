@@ -31,21 +31,26 @@ size_t	is_builtin(char *command)
 	return (0);
 }
 
-int	exec_in_builtin(char **argv)
+int	exec_in_builtin(char **argv, int now_input_fd, int now_output_fd)
 {
+	int	status;
+
+	if (now_input_fd != -1)
+		redirect(&now_input_fd, &now_output_fd);
 	if (ft_strcmp(argv[0], "pwd") == 0)
-		return (exec_pwd(argv));
+		status = exec_pwd(argv);
 	if (ft_strcmp(argv[0], "export") == 0)
-		return (exec_export(argv));
+		status = (exec_export(argv));
 	if (ft_strcmp(argv[0], "echo") == 0)
-		return (exec_echo(argv));
+		status = (exec_echo(argv));
 	if (ft_strcmp(argv[0], "unset") == 0)
-		return (exec_unset(argv));
+		status = (exec_unset(argv));
 	if (ft_strcmp(argv[0], "env") == 0)
-		return (exec_env());
+		status = (exec_env());
 	if (ft_strcmp(argv[0], "cd") == 0)
-		return (exec_cd(argv));
+		status = (exec_cd(argv));
 	if (ft_strcmp(argv[0], "exit") == 0)
-		return (exec_exit(argv));
-	return (1);
+		status = (exec_exit(argv));
+	undo_redirect(now_input_fd, now_output_fd);
+	return (status);
 }

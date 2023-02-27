@@ -6,116 +6,81 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 09:35:00 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/24 00:34:23 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/26 10:49:23 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*search_path(const char *filename)
+void	exec_in_nonbuiltin(char **argv, int now_input_fd, \
+								int now_output_fd, const char *path)
 {
-	char	path[PATH_MAX];
-	char	*value;
-	char	*end;
-
-	value = getenv("PATH");
-	while (*value)
-	{
-		ft_bzero(path, PATH_MAX);
-		end = ft_strchr(value, ':');
-		if (end)
-			ft_strlcpy(path, value, end - value + 1);
-		else
-			ft_strlcpy(path, value, PASS_MAX);
-		ft_strlcat(path, "/", PATH_MAX);
-		ft_strlcat(path, filename, PATH_MAX);
-		if (access(path, X_OK) == 0)
-			return (x_strdup(path));
-		if (end == NULL)
-			return (NULL);
-		value = end + 1;
-	}
-	return (NULL);
+	if (now_input_fd != -1)
+		redirect(&now_input_fd, &now_output_fd);
+	execve(path, argv, g_all.environ);
+	undo_redirect(now_input_fd, now_output_fd);
 }
 
-void	validate_access(const char *path, const char *filename)
+// is_builtin(argv[0]) && fds->num_pipe == 0 の場合に内蔵コマンドを実行する関数
+int	exec_builtin(char *argv[], t_fds *fds)
 {
-	if (path == NULL)
-		err_exit(filename, "command not found", 127);
-	if (access(path, F_OK) < 0)
-		err_exit(filename, "command not found", 127);
+	return (exec_in_builtin(argv, fds->now_input_fd, fds->now_output_fd));
 }
 
-int	exec(char *argv[])
+// パイプを使用している場合の子プロセスを生成してコマンドを実行する関数
+void	exec_child(char *argv[], t_fds *fds, int pfd[2], size_t *i)
 {
 	const char	*path = argv[0];
-	pid_t		pid;
-	int			wstatus;
 
+	if (fds->old_pipe_input_fd != 0)
+	{
+		dup2(fds->old_pipe_input_fd, 0);
+		close(fds->old_pipe_input_fd);
+	}
+	if (*i < fds->num_pipe)
+	{
+		dup2(pfd[1], 1);
+		close(pfd[1]);
+		close(pfd[0]);
+	}
 	if (is_builtin(argv[0]))
-		return (exec_in_builtin(argv));
+		exit(exec_builtin(argv, fds));
+	if (ft_strchr(path, '/') == NULL)
+		path = search_path(path);
+	validate_access(path, argv[0]);
+	exec_in_nonbuiltin(argv, fds->now_input_fd, fds->now_output_fd, path);
+	fatal_error("execve");
+}
+
+// パイプを使用している場合に親プロセスを更新する関数
+void	exec_parent(t_fds *fds, int pfd[2], size_t *i)
+{
+	if (fds->old_pipe_input_fd != 0)
+		close(fds->old_pipe_input_fd);
+	if (*i < fds->num_pipe)
+	{
+		fds->old_pipe_input_fd = pfd[0];
+		close(pfd[1]);
+	}
+	*i += 1;
+}
+
+// コマンドを実行するメインの関数
+int	exec(char *argv[], size_t *i, t_fds *fds)
+{
+	pid_t	pid;
+	int		pfd[2];
+
+	if (is_builtin(argv[0]) && fds->num_pipe == 0)
+		return (exec_builtin(argv, fds));
+	if (*i < fds->num_pipe && pipe(pfd) < 0)
+		fatal_error("pipe");
 	pid = fork();
 	if (pid < 0)
 		fatal_error("fork");
 	else if (pid == 0)
-	{
-		if (ft_strchr(path, '/') == NULL)
-			path = search_path(path);
-		validate_access(path, argv[0]);
-		execve(path, argv, g_all.environ);
-		fatal_error("execve");
-	}
+		exec_child(argv, fds, pfd, i);
 	else
-	{
-		wait(&wstatus);
-		return (WEXITSTATUS(wstatus));
-	}
+		exec_parent(fds, pfd, i);
+	return (0);
 }
-
-void	undo_redirect(int now_input_fd, int now_output_fd)
-{
-	close(0);
-	close(1);
-	dup2(now_input_fd, 0);
-	dup2(now_output_fd, 1);
-	close(now_input_fd);
-	close(now_output_fd);
-	return ;
-}
-
-int	interpret(char *const line)
-{
-	char	**argv;
-	t_token	*tok;
-	int		now_input_fd;
-	int		now_output_fd;
-	t_token	*tok_head;
-
-	now_input_fd = 0;
-	now_output_fd = 1;
-	tok_head = new_token(NULL);
-	tok = my_tokenizer(line, tok_head);
-	if (tok == NULL)
-		return (ERROR_TOKENIZE);
-	argv = expansion(tok, &now_input_fd, &now_output_fd);
-	if (argv == NULL || now_input_fd == -1)
-	{
-		return (free_argv_token(argv, tok) + 1);
-	}
-	g_all.last_status = exec(argv);
-	undo_redirect(now_input_fd, now_output_fd);
-	free_argv_token(argv, tok);
-	return (g_all.last_status);
-}
-
-
-	// while ()
-	// {
-	// 	argv = expansion(&tok, &now_input_fd, &now_output_fd);
-	// 	if (argv == NULL || now_input_fd == -1)
-	// 	{
-	// 		return (free_argv_token(argv, tok) + 1);
-	// 	}
-	// 	g_all.last_status = exec(argv);
-	// 	free(argv);
-	// }

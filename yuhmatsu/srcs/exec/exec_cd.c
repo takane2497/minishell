@@ -113,8 +113,8 @@ int	exec_cd(char **argv)
 		free(pwd);
 		return (cd_error(pwd, "No such file or directory", NULL));
 	}
-	if (ft_strcmp(argv[1], "-") == 0)
+	if (argv[1] != NULL && ft_strcmp(argv[1], "-") == 0)
 		printf("%s\n", pwd);
 	set_pwd_to_env_and_free(pwd);
-	return (1);
+	return (0);
 }

@@ -83,15 +83,15 @@ char	*remove_quote(char *word)
 	return (str);
 }
 
-char	**expansion(t_token *tok, int *now_input_fd, int *now_output_fd)
+char	**expansion(t_token **tok, int *now_input_fd, int *now_output_fd)
 {
 	char	**argv;
 	t_token	*tmp;
 	size_t	i;
 
-	if (init_expansion(&argv, &tmp, &i, tok))
+	if (init_expansion(&argv, &tmp, &i, *tok))
 		return (NULL);
-	while (tmp != NULL)
+	while (tmp != NULL && tmp->kind != TK_PIPE)
 	{
 		if (tmp->kind == TK_INPUT || tmp->kind == TK_DELIMITER)
 		{
@@ -107,7 +107,6 @@ char	**expansion(t_token *tok, int *now_input_fd, int *now_output_fd)
 			tmp = tmp->next;
 		}
 	}
-	if (*now_input_fd != -1)
-		redirect(now_input_fd, now_output_fd);
+	*tok = tmp;
 	return (argv);
 }

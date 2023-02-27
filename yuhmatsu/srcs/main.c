@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takonaga <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 18:11:16 by takonaga          #+#    #+#             */
-/*   Updated: 2023/02/09 18:11:19 by takonaga         ###   ########.fr       */
+/*   Updated: 2023/02/27 21:06:55 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,19 @@ t_env	*init_new_env(char *env_str)
 	return (env);
 }
 
+char	*my_getcwd(void)
+{
+	char	*pwd;
+
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+	{
+		perror("pwd init");
+		exit(1);
+	}
+	return (pwd);
+}
+
 void	init_global(void)
 {
 	size_t		i;
@@ -51,14 +64,11 @@ void	init_global(void)
 
 	i = 0;
 	g_all.last_status = 0;
-	g_all.now_pwd = getcwd(NULL, 0);
+	g_all.now_pwd = my_getcwd();
 	g_all.envs = init_new_env(NULL);
 	tmp = g_all.envs;
-	if (g_all.now_pwd == NULL)
-	{
-		perror("pwd init");
-		exit(1);
-	}
+	if (environ == NULL)
+		return ;
 	while (environ[i] != NULL)
 		i++;
 	g_all.environ = x_calloc(i + 1, sizeof(char *));
@@ -72,14 +82,42 @@ void	init_global(void)
 	}
 }
 
+int	interpret(char *const line)
+{
+	char	**argv;
+	t_token	*tok;
+	t_token	*tok_head;
+	t_fds	fds;
+
+	fds.i = 0;
+	tok_head = new_token(NULL);
+	tok = my_tokenizer(line, tok_head);
+	if (tok == NULL)
+		return (ERROR_TOKENIZE);
+	fds.num_pipe = count_pipe(tok_head);
+	while (tok != NULL)
+	{
+		fds.now_input_fd = 0;
+		fds.now_output_fd = 1;
+		argv = expansion(&tok, &fds.now_input_fd, &fds.now_output_fd);
+		if (argv == NULL || fds.now_input_fd == -1)
+			return (free_argv_token(argv, tok_head) + 1);
+		g_all.last_status = exec(argv, &fds.i, &fds);
+		free_argv(argv);
+	}
+	if (0 < fds.i)
+		g_all.last_status = all_wait(fds.i);
+	free_tok(tok_head);
+	return (g_all.last_status);
+}
+
 int	main(void)
 {
 	char	*line;
-	t_env	*env;
 
 	rl_outstream = stderr;
 	init_global();
-	env = g_all.envs;
+	init_signal();
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -95,5 +133,6 @@ int	main(void)
 		g_all.last_status = interpret(line);
 		free(line);
 	}
-	exit(g_all.last_status);
+	ft_dprintf(STDERR_FILENO, "\e[Aminishell$ exit\n");
+	exit(1);
 }
