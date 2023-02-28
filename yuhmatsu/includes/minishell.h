@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:25:15 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 02:08:26 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/27 22:23:39 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 # define NUM_STR_LEN 4
 # define MAX_LEN 256
 
+# define INTERRUPTED 0
+# define CONTINUE 1
+
 # define ERROR_PREFIX "minishell: "
 
 # include "../libft/libft.h"
@@ -37,6 +40,7 @@
 # include <string.h>
 # include <limits.h>
 # include <stdbool.h>
+# include <signal.h>
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -45,6 +49,7 @@
 typedef struct s_token	t_token;
 typedef struct s_all	t_all;
 typedef struct s_env	t_env;
+typedef struct s_fds	t_fds;
 extern t_all			g_all;
 
 struct s_env
@@ -60,6 +65,7 @@ struct s_all
 	char	**environ;
 	char	*now_pwd;
 	t_env	*envs;
+	size_t	heredoc_status;
 };
 
 struct s_token
@@ -69,24 +75,32 @@ struct s_token
 	t_token	*next;
 };
 
-typedef struct s_fds
+struct s_fds
 {
-	int		*input_fds;
-	int		*output_fds;
-	size_t	input_count;
-	size_t	output_count;
-	size_t	input_index;
-	size_t	output_index;
-}t_fds;
+	int		now_input_fd;
+	int		now_output_fd;
+	int		old_pipe_input_fd;
+	size_t	num_pipe;
+	size_t	i;
+};
 
 ssize_t	ft_strchr_pointer(const char *s, char c);
 
 int		interpret(char *const line);
+int		exec(char *argv[], size_t *i, t_fds *fds);
+char	*search_path(const char *filename);
+void	validate_access(const char *path, const char *filename);
+
+size_t	count_pipe(t_token *tok);
+int		all_wait(size_t	i);
+
+int		read_heredoc(const char *delimiter);
 
 t_token	*my_tokenizer(char *line, t_token *tok_head);
 t_token	*new_token(char *word);
 
-char	**expansion(t_token *tok, int *now_input_fd, int *now_output_fd);
+size_t	concat_char(char *str, char *word, size_t *i);
+char	**expansion(t_token **tok, int *now_input_fd, int *now_output_fd);
 
 void	*x_malloc(size_t size);
 void	*x_calloc(size_t count, size_t size);
@@ -101,7 +115,6 @@ size_t	is_operator(char *line);
 size_t	get_kinds(char *word);
 
 char	*get_env_len(char *word, size_t *i, size_t *len);
-
 size_t	get_len_word(char *word);
 
 size_t	token_size(t_token *tok, size_t *size);
@@ -116,11 +129,12 @@ void	err_msg(const char *location, const char *msg);
 t_token	*prepare_to_redirect_input(t_token *tmp, int *now_input_fd);
 t_token	*prepare_to_redirect_output(t_token *tmp, int *now_output_fd);
 void	redirect(int *now_input_fd, int *now_output_fd);
+void	undo_redirect(int now_input_fd, int now_output_fd);
 
 char	*remove_quote(char *word);
 
 size_t	is_builtin(char *command);
-int		exec_in_builtin(char **argv);
+int		exec_in_builtin(char **argv, int now_input_fd, int now_output_fd);
 
 int		exec_pwd(char **argv);
 int		exec_export(char **argv);
@@ -138,4 +152,10 @@ void	handle_slash(size_t	*flag, size_t *j);
 
 size_t	set_env(char *env_str, char *new_value);
 
+void	free_argv(char **argv);
+void	free_tok(t_token *tok);
+
+void	init_signal(void);
+void	signal_in_signal(void);
+void	signal_in_heredoc(void);
 #endif
