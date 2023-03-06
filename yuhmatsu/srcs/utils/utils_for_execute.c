@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 17:29:08 by takonaga          #+#    #+#             */
-/*   Updated: 2023/03/06 22:45:50 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/03/06 23:01:56 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,12 @@ int	all_wait(size_t	i)
 	{
 		pid = wait(&wstatus);
 		if (pid == g_all.last_pid)
-			last_wstatus = wstatus;
+		{
+			if (WIFSIGNALED(wstatus))
+				last_wstatus = 128 + WTERMSIG(wstatus);
+			else
+				last_wstatus = WEXITSTATUS(wstatus);
+		}
 		if (pid == -1)
 		{
 			perror("wait");

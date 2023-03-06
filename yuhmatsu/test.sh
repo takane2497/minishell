@@ -68,7 +68,7 @@ assert() {
 # Empty line (EOF)
 assert ''
 
-# Absolute path commands without args
+# Absolute path commands without args 
 assert '/bin/pwd'
 assert '/bin/echo'
 assert '/bin/ls'
@@ -239,21 +239,21 @@ assert './infinite_loop'
 
 # Manual Debug
 # $ ./minishell
-# $
-# 1. Ctrl-\
+# $ 
+# 1. Ctrl-\ 
 # 2. Ctrl-C
 # 3. Ctrl-D
 #
 # $ ./minishell
 # $ hogehoge
-# 1. Ctrl-\
+# 1. Ctrl-\ 
 # 2. Ctrl-C
 # 3. Ctrl-D
 #
 # $ ./minishell
 # $ cat <<EOF
 # >
-# 1. Ctrl-\
+# 1. Ctrl-\ 
 # 2. Ctrl-C
 # 3. Ctrl-D
 #
@@ -261,7 +261,7 @@ assert './infinite_loop'
 # $ cat <<EOF
 # > hoge
 # > fuga
-# 1. Ctrl-\
+# 1. Ctrl-\ 
 # 2. Ctrl-C
 # 3. Ctrl-D
 
@@ -358,3 +358,4 @@ assert 'unset PWD\ncd\nenv|grep PWD\ncd /tmp\nenv|grep PWD'
 
 
 cleanup
+
