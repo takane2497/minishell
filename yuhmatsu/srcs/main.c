@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 18:11:16 by takonaga          #+#    #+#             */
-/*   Updated: 2023/02/27 21:06:55 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/03/06 22:44:44 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,12 @@ char	*my_getcwd(void)
 	return (pwd);
 }
 
+// void	update_shell_level(void)
+// {
+// 	char	*shlvl;
+// 	int		shell_level;
+// }
+
 void	init_global(void)
 {
 	size_t		i;
@@ -80,6 +86,7 @@ void	init_global(void)
 		tmp = tmp->next;
 		i++;
 	}
+	// update_shell_level();
 }
 
 int	interpret(char *const line)
@@ -102,7 +109,7 @@ int	interpret(char *const line)
 		argv = expansion(&tok, &fds.now_input_fd, &fds.now_output_fd);
 		if (argv == NULL || fds.now_input_fd == -1)
 			return (free_argv_token(argv, tok_head) + 1);
-		g_all.last_status = exec(argv, &fds.i, &fds);
+		g_all.last_pid = exec(argv, &fds.i, &fds);
 		free_argv(argv);
 	}
 	if (0 < fds.i)

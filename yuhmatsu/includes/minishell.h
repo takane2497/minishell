@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:25:15 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/27 22:23:39 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/03/06 22:48:12 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ struct s_all
 	char	*now_pwd;
 	t_env	*envs;
 	size_t	heredoc_status;
+	pid_t	last_pid;
 };
 
 struct s_token
@@ -87,7 +88,7 @@ struct s_fds
 ssize_t	ft_strchr_pointer(const char *s, char c);
 
 int		interpret(char *const line);
-int		exec(char *argv[], size_t *i, t_fds *fds);
+pid_t	exec(char *argv[], size_t *i, t_fds *fds);
 char	*search_path(const char *filename);
 void	validate_access(const char *path, const char *filename);
 

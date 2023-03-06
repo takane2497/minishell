@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 09:35:00 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/26 10:49:23 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/03/06 22:47:36 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,16 @@ void	exec_parent(t_fds *fds, int pfd[2], size_t *i)
 }
 
 // コマンドを実行するメインの関数
-int	exec(char *argv[], size_t *i, t_fds *fds)
+pid_t	exec(char *argv[], size_t *i, t_fds *fds)
 {
 	pid_t	pid;
 	int		pfd[2];
 
 	if (is_builtin(argv[0]) && fds->num_pipe == 0)
-		return (exec_builtin(argv, fds));
+	{
+		g_all.last_status = exec_builtin(argv, fds);
+		return (0);
+	}
 	if (*i < fds->num_pipe && pipe(pfd) < 0)
 		fatal_error("pipe");
 	pid = fork();
@@ -82,5 +85,5 @@ int	exec(char *argv[], size_t *i, t_fds *fds)
 		exec_child(argv, fds, pfd, i);
 	else
 		exec_parent(fds, pfd, i);
-	return (0);
+	return (pid);
 }

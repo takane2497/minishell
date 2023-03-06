@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_for_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takonaga <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 17:29:08 by takonaga          #+#    #+#             */
-/*   Updated: 2023/02/26 17:29:09 by takonaga         ###   ########.fr       */
+/*   Updated: 2023/03/06 22:45:50 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,14 @@ size_t	count_pipe(t_token *tok)
 int	all_wait(size_t	i)
 {
 	int		wstatus;
+	int		last_wstatus;
 	pid_t	pid;
 
 	while (i)
 	{
 		pid = wait(&wstatus);
+		if (pid == g_all.last_pid)
+			last_wstatus = wstatus;
 		if (pid == -1)
 		{
 			perror("wait");
@@ -41,7 +44,7 @@ int	all_wait(size_t	i)
 		}
 		i--;
 	}
-	return (wstatus);
+	return (last_wstatus);
 }
 
 char	*search_path(const char *filename)
