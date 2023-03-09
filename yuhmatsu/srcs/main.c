@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 18:11:16 by takonaga          #+#    #+#             */
-/*   Updated: 2023/02/27 21:06:55 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/03/04 21:28:19 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_env	*init_new_env(char *env_str)
 	}
 	else
 	{
-		pointer_to_equal = ft_strchr_pointer(env_str, '=');
+		pointer_to_equal = check_name_and_return_to_eq_index(env_str);
 		if (pointer_to_equal < 0)
 		{
 			env->name = x_strdup(env_str);
@@ -56,12 +56,32 @@ char	*my_getcwd(void)
 	return (pwd);
 }
 
-void	init_global(void)
+int	update_shell_level(void)
+{
+	char	*shlvl;
+	int		shlvl_int;
+
+	shlvl = x_getenv("SHLVL");
+	if (shlvl == NULL || *shlvl == '\0')
+		set_env("SHLVL", "1");
+	else
+	{
+		shlvl_int = ft_atoi(shlvl);
+		if (shlvl < 0)
+			set_env("SHLVL", "0");
+		shlvl_int++;
+	}
+	return (1);
+}
+
+void	init_global(int build_status)
 {
 	size_t		i;
 	t_env		*tmp;
 	extern char	**environ;
 
+	if (build_status == RE_BUILD && update_shell_level())
+		return ;
 	i = 0;
 	g_all.last_status = 0;
 	g_all.now_pwd = my_getcwd();
@@ -80,6 +100,7 @@ void	init_global(void)
 		tmp = tmp->next;
 		i++;
 	}
+	update_shell_level();
 }
 
 int	interpret(char *const line)
@@ -113,10 +134,12 @@ int	interpret(char *const line)
 
 int	main(void)
 {
-	char	*line;
+	char		*line;
+	static int	re_build;
 
 	rl_outstream = stderr;
-	init_global();
+	init_global(re_build);
+	re_build = RE_BUILD;
 	init_signal();
 	while (1)
 	{

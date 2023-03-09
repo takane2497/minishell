@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 19:31:11 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/22 01:45:26 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/28 21:40:34 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,21 @@ size_t	error_in_export(char *env_str)
 	return (1);
 }
 
-ssize_t	ft_strchr_pointer(const char *s, char c)
+ssize_t	check_name_and_return_to_eq_index(const char *str)
 {
 	ssize_t	i;
 
 	i = 0;
-	if (*s == '\0')
+	if (!(is_alpha_under(str[i])))
 		return (0);
-	while (s[i] != '\0')
-	{
-		if (s[i] == c)
-			return (i);
+	while (is_alpha_num_under(str[i]))
 		i++;
-	}
-	if (c == '\0')
+	if (str[i] == '=')
 		return (i);
-	return (-1);
+	else if (str[i] == '\0')
+		return (-1);
+	else
+		return (0);
 }
 
 t_env	*add_env(char *env_str, ssize_t pointer_to_equal)
@@ -64,7 +63,7 @@ size_t	set_env(char *env_str, char *new_value)
 	ssize_t	pointer_to_equal;
 	t_env	*env;
 
-	pointer_to_equal = ft_strchr_pointer(env_str, '=');
+	pointer_to_equal = check_name_and_return_to_eq_index(env_str);
 	if (pointer_to_equal == 0)
 		return (error_in_export(env_str));
 	if (0 < pointer_to_equal)

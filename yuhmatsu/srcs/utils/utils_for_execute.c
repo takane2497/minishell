@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_for_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takonaga <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 17:29:08 by takonaga          #+#    #+#             */
-/*   Updated: 2023/02/26 17:29:09 by takonaga         ###   ########.fr       */
+/*   Updated: 2023/03/09 14:48:21 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,9 @@ char	*search_path(const char *filename)
 	char	*value;
 	char	*end;
 
-	value = getenv("PATH");
+	value = x_getenv("PATH");
+	if (value == NULL)
+		return (NULL);
 	while (*value)
 	{
 		ft_bzero(path, PATH_MAX);

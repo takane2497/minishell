@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 22:22:16 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/27 22:22:40 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/28 18:40:53 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	read_heredoc(const char *delimiter)
 	{
 		line = readline("> ");
 		if (line == NULL)
-			ft_dprintf(1, "\e[A\e[2C");
+			ft_dprintf(STDOUT_FILENO, "\e[A\e[2C");
 		line = interpret_line(line);
 		if (line == NULL || g_all.heredoc_status == INTERRUPTED || \
 			ft_strncmp(line, delimiter, len) == 0)

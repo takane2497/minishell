@@ -6,7 +6,7 @@
 /*   By: yuhmatsu <yuhmatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 17:25:15 by yuhmatsu          #+#    #+#             */
-/*   Updated: 2023/02/27 22:23:39 by yuhmatsu         ###   ########.fr       */
+/*   Updated: 2023/02/28 21:42:32 by yuhmatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 
 # define INTERRUPTED 0
 # define CONTINUE 1
+
+# define RE_BUILD 1
 
 # define ERROR_PREFIX "minishell: "
 
@@ -84,7 +86,7 @@ struct s_fds
 	size_t	i;
 };
 
-ssize_t	ft_strchr_pointer(const char *s, char c);
+ssize_t	check_name_and_return_to_eq_index(const char *str);
 
 int		interpret(char *const line);
 int		exec(char *argv[], size_t *i, t_fds *fds);

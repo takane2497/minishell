@@ -1,4 +1,5 @@
 NAME := minishell
+CC = gcc
 ifeq ($(shell uname), Darwin)
 	CFLAGS +=  -I$(shell brew --prefix readline)/include -g -Wall -Wextra -Werror
 	LDFLAGS += -L$(shell brew --prefix readline)/lib -lreadline -lhistory
@@ -31,11 +32,11 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(MAKE) -C $(LIBFT)
-	$(CC) $(CFLAGS) -I $(INCLUDE) $(OBJS) $(LDFLAGS) $(LIBFT)/libft.a -o $@
+	$(CC) $(CFLAGS) -I$(INCLUDE) $(OBJS) $(LDFLAGS) $(LIBFT)/libft.a -o $@
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	mkdir -p $(OBJS_DIR)/$(*D)
-	$(CC) $(CFLAGS) -I $(INCLUDE) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o $@
 
 .PHONY: clean
 clean:
